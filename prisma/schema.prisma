@@ -1,0 +1,109 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Application {
+  id                 String    @id @default(cuid())
+  firstName          String
+  middleName         String?
+  lastName           String
+  dateOfBirth        DateTime
+  gender             String
+  email              String    @unique
+  phoneNumber        String
+  residentialAddress String
+  country            String
+  state              String
+  city               String
+  postalCode         String
+  idType             String
+  idNumber           String
+  idExpiryDate       DateTime
+  nationality        String
+  accountType        String
+  preferredCurrency  String
+  occupation         String
+  employer           String?
+  password           String
+  pin                String
+  passportPhoto      String?
+  governmentId       String?
+  status             String    @default("Pending")
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  customer           Customer?
+}
+
+model Customer {
+  id                     String                  @id @default(cuid())
+  applicationId          String                  @unique
+  accountNumber          String                  @unique
+  balance                Float                   @default(0)
+  accountStatus          String                  @default("Active")
+  createdAt              DateTime                @default(now())
+  updatedAt              DateTime                @updatedAt
+  application            Application             @relation(fields: [applicationId], references: [id])
+  internationalTransfers InternationalTransfer[]
+  notifications          Notification[]
+  transactions           Transaction[]
+}
+
+model Transaction {
+  id              String   @id @default(cuid())
+  customerId      String
+  type            String
+  amount          Float
+  description     String?
+  createdAt       DateTime @default(now())
+  currency        String
+  reference       String?  @unique
+  status          String   @default("Completed")
+  transactionDate DateTime @default(now())
+  customer        Customer @relation(fields: [customerId], references: [id])
+}
+
+model InternationalTransfer {
+  id               String   @id @default(cuid())
+  customerId       String
+  recipientName    String
+  recipientAddress String
+  bankName         String
+  bankAddress      String
+  country          String
+  swiftCode        String
+  accountNumber    String
+  currency         String
+  amount           Float
+  purpose          String
+  description      String?
+  status           String   @default("Pending Transfer Code")
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  transferCode     String?
+  customer         Customer @relation(fields: [customerId], references: [id])
+}
+
+model Admin {
+  id        String   @id @default(cuid())
+  fullName  String
+  password  String
+  role      String   @default("Administrator")
+  status    String   @default("Active")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  username  String   @unique
+}
+
+model Notification {
+  id         String   @id @default(cuid())
+  customerId String
+  title      String
+  message    String
+  isRead     Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  customer   Customer @relation(fields: [customerId], references: [id])
+}
