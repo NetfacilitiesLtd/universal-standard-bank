@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { UserPlus } from "lucide-react";
 
 export default async function CustomersPage() {
   const customers = await prisma.customer.findMany({
@@ -13,14 +14,24 @@ export default async function CustomersPage() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-4xl font-bold text-slate-900">
-          Customers
-        </h1>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-4xl font-bold text-slate-900">
+            Customers
+          </h1>
 
-        <p className="text-slate-500 mt-2">
-          All approved bank customers
-        </p>
+          <p className="text-slate-500 mt-2">
+            All approved bank customers
+          </p>
+        </div>
+
+        <Link
+          href="/admin/customers/new"
+          className="inline-flex items-center gap-2 rounded-xl bg-red-600 px-6 py-3 font-semibold text-white transition hover:bg-red-700"
+        >
+          <UserPlus size={20} />
+          Register New Customer
+        </Link>
       </div>
 
       <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">

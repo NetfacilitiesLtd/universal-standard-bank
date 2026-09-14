@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft, UserPlus } from "lucide-react";
 import { prisma } from "@/lib/prisma";
+import { createAccount } from "./actions";
 
 export const dynamic = "force-dynamic";
 
@@ -61,7 +62,7 @@ export default async function NewAccountPage() {
 
         </div>
 
-        <form className="space-y-6">
+        <form action={createAccount} className="space-y-6">
 
           {/* Customer */}
           <div>
@@ -97,6 +98,28 @@ export default async function NewAccountPage() {
                 No customers are currently available.
               </p>
             )}
+          </div>
+
+          {/* Account Number */}
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-2">
+              Account Number
+            </label>
+
+            <input
+              name="accountNumber"
+              type="text"
+              inputMode="numeric"
+              maxLength={12}
+              pattern="[0-9]{12}"
+              placeholder="Enter 12-digit account number or leave blank"
+              className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-red-500"
+            />
+
+            <p className="text-sm text-slate-500 mt-2">
+              Enter a preferred 12-digit account number, or leave blank to
+              automatically generate one.
+            </p>
           </div>
 
           {/* Account Type */}

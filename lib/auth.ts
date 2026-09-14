@@ -5,10 +5,13 @@ import { prisma } from "@/lib/prisma";
 const secret = new TextEncoder().encode(process.env.JWT_SECRET!);
 
 export async function createToken(payload: Record<string, unknown>) {
+  const expirationTime =
+    payload.type === "admin" ? "1h" : "15m";
+
   return await new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setExpirationTime("15m")
+    .setExpirationTime(expirationTime)
     .sign(secret);
 }
 

@@ -1,17 +1,18 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { randomInt } from "crypto";
 
 async function generateAccountNumber() {
   while (true) {
-    // Generate a random 12-digit account number starting with 210
-    const randomDigits = Math.floor(
-      100000000 + Math.random() * 900000000
-    );
+    // Generate 9 random digits after the 210 prefix
+    const randomDigits = randomInt(0, 1_000_000_000)
+      .toString()
+      .padStart(9, "0");
 
+    // Final account number is exactly 12 digits
     const accountNumber = `210${randomDigits}`;
 
     // Check if the account number already exists
@@ -21,7 +22,7 @@ async function generateAccountNumber() {
       },
     });
 
-    // If it's unique, return it
+    // Only use the number if it is unique
     if (!existingCustomer) {
       return accountNumber;
     }
@@ -40,7 +41,7 @@ export async function approveApplication(applicationId: string) {
 
     if (!application) {
       console.error("Application not found.");
-      return;
+      redirect("/admin");
     }
 
     if (application.status === "Approved") {
@@ -48,9 +49,11 @@ export async function approveApplication(applicationId: string) {
       redirect("/admin");
     }
 
+    // Automatically generate a unique 12-digit account number
     const accountNumber = await generateAccountNumber();
 
-    await prisma.$transaction(async (tx: any) => {
+    await prisma.$transaction(async (tx) => {
+      // Approve the application
       await tx.application.update({
         where: {
           id: applicationId,
@@ -60,6 +63,7 @@ export async function approveApplication(applicationId: string) {
         },
       });
 
+      // Create the customer account
       await tx.customer.create({
         data: {
           applicationId: application.id,
@@ -76,30 +80,33 @@ export async function approveApplication(applicationId: string) {
     revalidatePath("/admin");
     revalidatePath(`/admin/applications/${applicationId}`);
     revalidatePath("/admin/customers");
-
-    
   } catch (error) {
     console.error("Approval failed:", error);
   }
+
   redirect("/admin");
 }
 
 export async function rejectApplication(applicationId: string) {
-  console.log("Rejecting application:", applicationId);
+  try {
+    console.log("Rejecting application:", applicationId);
 
-  await prisma.application.update({
-    where: {
-      id: applicationId,
-    },
-    data: {
-      status: "Rejected",
-    },
-  });
+    await prisma.application.update({
+      where: {
+        id: applicationId,
+      },
+      data: {
+        status: "Rejected",
+      },
+    });
 
-  console.log("Application rejected successfully.");
+    console.log("Application rejected successfully.");
 
-  revalidatePath("/admin");
-  revalidatePath(`/admin/applications/${applicationId}`);
+    revalidatePath("/admin");
+    revalidatePath(`/admin/applications/${applicationId}`);
+  } catch (error) {
+    console.error("Rejection failed:", error);
+  }
 
   redirect("/admin");
 }
