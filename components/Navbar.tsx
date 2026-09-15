@@ -14,8 +14,8 @@ export default function Navbar({
 
   const navLinks = [
     { name: "Home", href: "/#home" },
-    { name: "Personal Banking", href: "/#personal" },
-{ name: "Business Banking", href: "/#business" },
+    { name: "Personal Banking", href: "/personal-banking" },
+{ name: "Business Banking", href: "/business-banking" },
 { name: "About Us", href: "/#about" },
 { name: "Contact", href: "/contact" },
   ];
