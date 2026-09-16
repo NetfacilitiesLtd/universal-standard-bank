@@ -14,28 +14,41 @@ export async function deleteCustomer(customerId: string) {
     throw new Error("Customer not found.");
   }
 
-  await prisma.internationalTransfer.deleteMany({
-    where: {
-      customerId,
-    },
-  });
+  await prisma.$transaction(async (tx) => {
+    // Delete notifications belonging to the customer
+    await tx.notification.deleteMany({
+      where: {
+        customerId,
+      },
+    });
 
-  await prisma.transaction.deleteMany({
-    where: {
-      customerId,
-    },
-  });
+    // Delete international transfers belonging to the customer
+    await tx.internationalTransfer.deleteMany({
+      where: {
+        customerId,
+      },
+    });
 
-  await prisma.customer.delete({
-    where: {
-      id: customerId,
-    },
-  });
+    // Delete transactions belonging to the customer
+    await tx.transaction.deleteMany({
+      where: {
+        customerId,
+      },
+    });
 
-  await prisma.application.delete({
-    where: {
-      id: customer.applicationId,
-    },
+    // Delete the customer account
+    await tx.customer.delete({
+      where: {
+        id: customerId,
+      },
+    });
+
+    // Delete the related application
+    await tx.application.delete({
+      where: {
+        id: customer.applicationId,
+      },
+    });
   });
 
   revalidatePath("/admin/customers");
