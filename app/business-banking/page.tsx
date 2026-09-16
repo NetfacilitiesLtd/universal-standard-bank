@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import {
   BriefcaseBusiness,
   Building2,
@@ -53,39 +54,58 @@ export default function BusinessBankingPage() {
       {/* Hero */}
       <section className="relative overflow-hidden bg-white pt-36 pb-24">
         <div className="relative max-w-7xl mx-auto px-6">
-          <div className="max-w-3xl">
-            <p className="uppercase tracking-[5px] text-red-600 text-sm font-semibold">
-              Business Banking
-            </p>
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
 
-            <h1 className="mt-5 text-5xl md:text-6xl font-bold text-slate-900 leading-tight">
-              Banking Built
-              <br />
-              for Business
-            </h1>
+            {/* Left Content */}
+            <div className="max-w-3xl">
+              <p className="uppercase tracking-[5px] text-red-600 text-sm font-semibold">
+                Business Banking
+              </p>
 
-            <p className="mt-6 text-lg md:text-xl text-slate-600 leading-8 max-w-2xl">
-              Banking solutions designed to help businesses manage their
-              finances, support growth and handle everyday financial
-              operations with confidence.
-            </p>
+              <h1 className="mt-5 text-5xl md:text-6xl font-bold text-slate-900 leading-tight">
+                Banking Built
+                <br />
+                for Business
+              </h1>
 
-            <div className="mt-9 flex flex-col sm:flex-row gap-4">
-              <Link
-                href="/apply"
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-red-600 px-7 py-4 font-semibold text-white transition hover:bg-red-700"
-              >
-                Open an Account
-                <ArrowRight size={18} />
-              </Link>
+              <p className="mt-6 text-lg md:text-xl text-slate-600 leading-8 max-w-2xl">
+                Banking solutions designed to help businesses manage their
+                finances, support growth and handle everyday financial
+                operations with confidence.
+              </p>
 
-              <Link
-                href="/contact"
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-slate-900 px-7 py-4 font-semibold text-white transition hover:bg-slate-800"
-              >
-                Contact Us
-              </Link>
+              <div className="mt-9 flex flex-col sm:flex-row gap-4">
+                <Link
+                  href="/apply"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-red-600 px-7 py-4 font-semibold text-white transition hover:bg-red-700"
+                >
+                  Open an Account
+                  <ArrowRight size={18} />
+                </Link>
+
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-slate-900 px-7 py-4 font-semibold text-white transition hover:bg-slate-800"
+                >
+                  Contact Us
+                </Link>
+              </div>
             </div>
+
+            {/* Right Image */}
+            <div className="relative">
+              <div className="overflow-hidden rounded-3xl shadow-xl">
+                <Image
+                  src="/images/business-banking.jpg"
+                  alt="Business banking consultation"
+                  width={1200}
+                  height={900}
+                  className="w-full h-[380px] lg:h-[480px] object-cover"
+                  priority
+                />
+              </div>
+            </div>
+
           </div>
         </div>
       </section>
