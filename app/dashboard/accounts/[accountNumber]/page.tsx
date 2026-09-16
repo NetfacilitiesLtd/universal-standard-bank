@@ -142,7 +142,7 @@ export default async function AccountDetailsPage() {
 
                 <p className="text-slate-500 text-sm">
                   {new Date(
-                    customer.transactions[0]?.createdAt
+                    customer.transactions[0]?.transactionDate
                   ).toLocaleString()}
                 </p>
               </div>
@@ -163,7 +163,7 @@ export default async function AccountDetailsPage() {
 
                 <p className="text-slate-500 text-sm">
                   {new Date(
-                    customer.transactions[1]?.createdAt
+                    customer.transactions[1]?.transactionDate
                   ).toLocaleString()}
                 </p>
               </div>
@@ -184,7 +184,7 @@ export default async function AccountDetailsPage() {
 
                 <p className="text-slate-500 text-sm">
                   {new Date(
-                    customer.transactions[2]?.createdAt
+                    customer.transactions[2]?.transactionDate
                   ).toLocaleString()}
                 </p>
               </div>
