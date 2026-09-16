@@ -52,58 +52,60 @@ export default function BusinessBankingPage() {
       <Navbar />
 
       {/* Hero */}
-      <section className="relative overflow-hidden bg-white pt-36 pb-24">
-        <div className="relative max-w-7xl mx-auto px-6">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+      <section className="relative min-h-[760px] overflow-hidden">
 
-            {/* Left Content */}
-            <div className="max-w-3xl">
-              <p className="uppercase tracking-[5px] text-red-600 text-sm font-semibold">
-                Business Banking
-              </p>
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <Image
+            src="/images/business-banking.jpg"
+            alt="Business banking consultation"
+            fill
+            priority
+            className="object-cover object-center"
+          />
 
-              <h1 className="mt-5 text-5xl md:text-6xl font-bold text-slate-900 leading-tight">
-                Banking Built
-                <br />
-                for Business
-              </h1>
+          {/* White gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-white via-white/60 via-25% to-transparent" />
 
-              <p className="mt-6 text-lg md:text-xl text-slate-600 leading-8 max-w-2xl">
-                Banking solutions designed to help businesses manage their
-                finances, support growth and handle everyday financial
-                operations with confidence.
-              </p>
+          {/* Soft lower fade */}
+          <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-white/70 to-transparent" />
+        </div>
 
-              <div className="mt-9 flex flex-col sm:flex-row gap-4">
-                <Link
-                  href="/apply"
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-red-600 px-7 py-4 font-semibold text-white transition hover:bg-red-700"
-                >
-                  Open an Account
-                  <ArrowRight size={18} />
-                </Link>
+        {/* Hero Content */}
+        <div className="relative z-10 max-w-7xl mx-auto px-6 pt-48 pb-28 min-h-[760px] flex items-center">
+          <div className="max-w-2xl">
 
-                <Link
-                  href="/contact"
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-slate-900 px-7 py-4 font-semibold text-white transition hover:bg-slate-800"
-                >
-                  Contact Us
-                </Link>
-              </div>
-            </div>
+            <p className="uppercase tracking-[5px] text-red-600 text-sm font-semibold">
+              Business Banking
+            </p>
 
-            {/* Right Image */}
-            <div className="relative">
-              <div className="overflow-hidden rounded-3xl shadow-xl">
-                <Image
-                  src="/images/business-banking.jpg"
-                  alt="Business banking consultation"
-                  width={1200}
-                  height={900}
-                  className="w-full h-[380px] lg:h-[480px] object-cover"
-                  priority
-                />
-              </div>
+            <h1 className="mt-5 text-5xl md:text-6xl font-bold text-slate-900 leading-tight">
+              Banking Built
+              <br />
+              for <span className="text-red-600">Business</span>
+            </h1>
+
+            <p className="mt-6 text-lg md:text-xl text-slate-600 leading-8 max-w-2xl">
+              Banking solutions designed to help businesses manage their
+              finances, support growth and handle everyday financial
+              operations with confidence.
+            </p>
+
+            <div className="mt-9 flex flex-col sm:flex-row gap-4">
+              <Link
+                href="/apply"
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-red-600 px-7 py-4 font-semibold text-white transition hover:bg-red-700"
+              >
+                Open an Account
+                <ArrowRight size={18} />
+              </Link>
+
+              <Link
+                href="/contact"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-slate-900 bg-white/80 px-7 py-4 font-semibold text-slate-900 transition hover:bg-slate-900 hover:text-white"
+              >
+                Contact Us
+              </Link>
             </div>
 
           </div>

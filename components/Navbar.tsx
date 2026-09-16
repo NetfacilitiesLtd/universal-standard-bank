@@ -15,37 +15,29 @@ export default function Navbar({
   const navLinks = [
     { name: "Home", href: "/#home" },
     { name: "Personal Banking", href: "/personal-banking" },
-{ name: "Business Banking", href: "/business-banking" },
-{ name: "About Us", href: "/#about" },
-{ name: "Contact", href: "/contact" },
+    { name: "Business Banking", href: "/business-banking" },
+    { name: "About Us", href: "/#about" },
+    { name: "Contact", href: "/contact" },
   ];
 
   return (
     <header className="absolute top-0 left-0 right-0 z-50">
       <div className="max-w-7xl mx-auto px-6">
-
         <div className="flex items-center justify-between h-20">
-
-          {/* Logo */}
-
-{showLogo && (
-  <Link href="/" className="flex items-center">
-
-    <Image
-  src="/logo.png"
-  alt="Universal Standard Bank"
-  width={170}
-  height={48}
-  priority
-/>
-
-  </Link>
-)}
-
-          {/* Desktop Navigation */}
+          {showLogo && (
+            <Link href="/" className="flex items-center">
+              <Image
+                src="/logo-transparent.png"
+                alt="Universal Standard Bank"
+                width={170}
+                height={48}
+                priority
+                className="mix-blend-multiply"
+              />
+            </Link>
+          )}
 
           <nav className="hidden lg:flex items-center gap-8">
-
             {navLinks.map((link) => (
               <Link
                 key={link.name}
@@ -63,13 +55,9 @@ export default function Navbar({
                 )}
               </Link>
             ))}
-
           </nav>
 
-          {/* Desktop Buttons */}
-
           <div className="hidden lg:flex items-center gap-3">
-
             <Link
               href="/apply"
               className="rounded-lg bg-red-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-red-700"
@@ -83,10 +71,7 @@ export default function Navbar({
             >
               Login
             </Link>
-
           </div>
-
-          {/* Mobile Button */}
 
           <button
             className="lg:hidden"
@@ -94,16 +79,11 @@ export default function Navbar({
           >
             {isOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
-
         </div>
-
-        {/* Mobile Menu */}
 
         {isOpen && (
           <div className="rounded-xl bg-white shadow-lg border border-gray-200 p-6 lg:hidden">
-
             <div className="flex flex-col gap-5">
-
               {navLinks.map((link) => (
                 <Link
                   key={link.name}
@@ -128,12 +108,9 @@ export default function Navbar({
               >
                 Login
               </Link>
-
             </div>
-
           </div>
         )}
-
       </div>
     </header>
   );
