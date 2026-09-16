@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { updateTransaction } from "./actions";
+
 type EditTransactionPageProps = {
   params: Promise<{
     id: string;
@@ -41,6 +42,15 @@ export default async function EditTransactionPage({
 
   const application = transaction.customer.application;
 
+  const transactionDate = transaction.transactionDate
+    .toISOString()
+    .split("T")[0];
+
+  const transactionTime = transaction.transactionDate
+    .toISOString()
+    .split("T")[1]
+    .slice(0, 5);
+
   return (
     <div className="space-y-6">
       <div>
@@ -61,7 +71,10 @@ export default async function EditTransactionPage({
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <div>
-            <label className="text-sm text-slate-500">Customer</label>
+            <label className="text-sm text-slate-500">
+              Customer
+            </label>
+
             <input
               value={`${application.firstName} ${application.lastName}`}
               readOnly
@@ -70,7 +83,10 @@ export default async function EditTransactionPage({
           </div>
 
           <div>
-            <label className="text-sm text-slate-500">Account Number</label>
+            <label className="text-sm text-slate-500">
+              Account Number
+            </label>
+
             <input
               value={transaction.customer.accountNumber}
               readOnly
@@ -79,7 +95,10 @@ export default async function EditTransactionPage({
           </div>
 
           <div>
-            <label className="text-sm text-slate-500">Account Type</label>
+            <label className="text-sm text-slate-500">
+              Account Type
+            </label>
+
             <input
               value={application.accountType}
               readOnly
@@ -88,7 +107,10 @@ export default async function EditTransactionPage({
           </div>
 
           <div>
-            <label className="text-sm text-slate-500">Currency</label>
+            <label className="text-sm text-slate-500">
+              Currency
+            </label>
+
             <input
               value={transaction.currency}
               readOnly
@@ -105,31 +127,38 @@ export default async function EditTransactionPage({
         </h2>
 
         <form
-  action={updateTransaction}
-  className="grid grid-cols-1 gap-6 md:grid-cols-2"
->
-  <input
-  type="hidden"
-  name="id"
-  value={transaction.id}
-/>
+          action={updateTransaction}
+          className="grid grid-cols-1 gap-6 md:grid-cols-2"
+        >
+          <input
+            type="hidden"
+            name="id"
+            value={transaction.id}
+          />
+
           <div>
-            <label className="text-sm text-slate-500">Reference</label>
+            <label className="text-sm text-slate-500">
+              Reference
+            </label>
+
             <input
-  type="text"
-  name="reference"
-  defaultValue={transaction.reference ?? ""}
-  className="mt-1 w-full rounded-md border px-3 py-2"
-/>
+              type="text"
+              name="reference"
+              defaultValue={transaction.reference ?? ""}
+              className="mt-1 w-full rounded-md border px-3 py-2"
+            />
           </div>
 
           <div>
-            <label className="text-sm text-slate-500">Status</label>
+            <label className="text-sm text-slate-500">
+              Status
+            </label>
+
             <select
-  name="status"
-  defaultValue={transaction.status}
-  className="mt-1 w-full rounded-md border px-3 py-2"
->
+              name="status"
+              defaultValue={transaction.status}
+              className="mt-1 w-full rounded-md border px-3 py-2"
+            >
               <option>Completed</option>
               <option>Pending</option>
               <option>Failed</option>
@@ -137,30 +166,62 @@ export default async function EditTransactionPage({
           </div>
 
           <div>
-            <label className="text-sm text-slate-500">Amount</label>
+            <label className="text-sm text-slate-500">
+              Amount
+            </label>
+
             <input
-  type="number"
-  name="amount"
-  step="0.01"
-  defaultValue={transaction.amount}
-  className="mt-1 w-full rounded-md border px-3 py-2"
-/>
+              type="number"
+              name="amount"
+              step="0.01"
+              defaultValue={transaction.amount}
+              className="mt-1 w-full rounded-md border px-3 py-2"
+            />
+          </div>
+
+          {/* Transaction Date */}
+          <div>
+            <label
+              htmlFor="transactionDate"
+              className="text-sm text-slate-500"
+            >
+              Transaction Date
+            </label>
+
+            <input
+              id="transactionDate"
+              type="date"
+              name="transactionDate"
+              defaultValue={transactionDate}
+              required
+              className="mt-1 w-full rounded-md border px-3 py-2"
+            />
+          </div>
+
+          {/* Transaction Time */}
+          <div>
+            <label
+              htmlFor="transactionTime"
+              className="text-sm text-slate-500"
+            >
+              Transaction Time
+            </label>
+
+            <input
+              id="transactionTime"
+              type="time"
+              name="transactionTime"
+              defaultValue={transactionTime}
+              required
+              className="mt-1 w-full rounded-md border px-3 py-2"
+            />
           </div>
 
           <div>
-            <label className="text-sm text-slate-500">Transaction Date</label>
-            <input
-  type="date"
-  name="transactionDate"
-  defaultValue={transaction.transactionDate
-    .toISOString()
-    .split("T")[0]}
-  className="mt-1 w-full rounded-md border px-3 py-2"
-/>
-          </div>
+            <label className="text-sm text-slate-500">
+              Transaction Type
+            </label>
 
-          <div>
-            <label className="text-sm text-slate-500">Transaction Type</label>
             <input
               value={transaction.type}
               readOnly
@@ -169,29 +230,33 @@ export default async function EditTransactionPage({
           </div>
 
           <div className="md:col-span-2">
-            <label className="text-sm text-slate-500">Description</label>
-            <textarea
-  name="description"
-  defaultValue={transaction.description ?? ""}
-  rows={4}
-  className="mt-1 w-full rounded-md border px-3 py-2"
-/>
-          </div>
-          <div className="md:col-span-2 flex justify-end gap-3 pt-4">
-  <Link
-  href={`/admin/transactions/${transaction.id}`}
-  className="rounded-md border px-5 py-2 hover:bg-slate-100"
->
-  Cancel
-</Link>
+            <label className="text-sm text-slate-500">
+              Description
+            </label>
 
-  <button
-    type="submit"
-    className="rounded-md bg-blue-600 px-5 py-2 font-medium text-white hover:bg-blue-700"
-  >
-    Save Changes
-  </button>
-</div>
+            <textarea
+              name="description"
+              defaultValue={transaction.description ?? ""}
+              rows={4}
+              className="mt-1 w-full rounded-md border px-3 py-2"
+            />
+          </div>
+
+          <div className="md:col-span-2 flex justify-end gap-3 pt-4">
+            <Link
+              href={`/admin/transactions/${transaction.id}`}
+              className="rounded-md border px-5 py-2 hover:bg-slate-100"
+            >
+              Cancel
+            </Link>
+
+            <button
+              type="submit"
+              className="rounded-md bg-blue-600 px-5 py-2 font-medium text-white hover:bg-blue-700"
+            >
+              Save Changes
+            </button>
+          </div>
         </form>
       </div>
     </div>
