@@ -166,7 +166,7 @@ export default function Footer() {
                 />
 
                 <span>
-                  info@stanub.com
+                  info@universalstanb.com
                 </span>
 
               </div>

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 export default function PersonalBankingPage() {
   return (
@@ -108,6 +109,7 @@ export default function PersonalBankingPage() {
           </Link>
         </div>
       </section>
+          <Footer />
     </main>
   );
 }

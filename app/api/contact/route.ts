@@ -24,7 +24,7 @@ export async function POST(request: Request) {
 
     await transporter.sendMail({
       from: `"Universal Standard Bank Website" <${process.env.ZOHO_EMAIL}>`,
-      to: "info@stanub.com",
+      to: "info@universalstanb.com",
       replyTo: email,
       subject: `Website Contact: ${subject}`,
       text: `
