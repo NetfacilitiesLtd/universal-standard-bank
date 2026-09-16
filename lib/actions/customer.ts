@@ -70,13 +70,13 @@ export async function depositMoney(formData: FormData) {
   }
 
   const customer = await prisma.customer.findUnique({
-  where: {
-    id: customerId,
-  },
-  include: {
-    application: true,
-  },
-});
+    where: {
+      id: customerId,
+    },
+    include: {
+      application: true,
+    },
+  });
 
   if (!customer) {
     throw new Error("Customer not found.");
@@ -95,22 +95,24 @@ export async function depositMoney(formData: FormData) {
     }),
 
     prisma.transaction.create({
-  data: {
+      data: {
+        customerId,
+        reference: `TXN-${Date.now()}`,
+        type: "Deposit",
+        amount,
+        currency: customer.application.preferredCurrency,
+        status: "Completed",
+        description,
+      },
+    }),
+  ]);
+
+  await createNotification({
     customerId,
-    reference: `TXN-${Date.now()}`,
-    type: "Deposit",
-    amount,
-    currency: customer.application.preferredCurrency,
-    status: "Completed",
-    description,
-  },
-}),
-]);
-await createNotification({
-  customerId,
-  title: "Deposit Received",
-  message: `${customer.application.preferredCurrency} ${amount.toLocaleString()} has been credited to your account.`,
-});
+    title: "Deposit Received",
+    message: `${customer.application.preferredCurrency} ${amount.toLocaleString()} has been credited to your account.`,
+  });
+
   redirect(`/admin/customers/${customerId}`);
 }
 
@@ -131,13 +133,13 @@ export async function withdrawMoney(formData: FormData) {
   }
 
   const customer = await prisma.customer.findUnique({
-  where: {
-    id: customerId,
-  },
-  include: {
-    application: true,
-  },
-});
+    where: {
+      id: customerId,
+    },
+    include: {
+      application: true,
+    },
+  });
 
   if (!customer) {
     throw new Error("Customer not found.");
@@ -160,22 +162,24 @@ export async function withdrawMoney(formData: FormData) {
     }),
 
     prisma.transaction.create({
-  data: {
+      data: {
+        customerId,
+        reference: `TXN-${Date.now()}`,
+        type: "Withdrawal",
+        amount,
+        currency: customer.application.preferredCurrency,
+        status: "Completed",
+        description,
+      },
+    }),
+  ]);
+
+  await createNotification({
     customerId,
-    reference: `TXN-${Date.now()}`,
-    type: "Withdrawal",
-    amount,
-    currency: customer.application.preferredCurrency,
-    status: "Completed",
-    description,
-  },
-}),
-]);
-await createNotification({
-  customerId,
-  title: "Withdrawal Successful",
-  message: `${customer.application.preferredCurrency} ${amount.toLocaleString()} has been debited from your account.`,
-});
+    title: "Withdrawal Successful",
+    message: `${customer.application.preferredCurrency} ${amount.toLocaleString()} has been debited from your account.`,
+  });
+
   redirect(`/admin/customers/${customerId}`);
 }
 
@@ -204,12 +208,53 @@ export async function updateAccountStatus(formData: FormData) {
 
   redirect(`/admin/accounts/${customerId}`);
 }
+
+export async function updateAccountOpenedAt(formData: FormData) {
+  const customerId = formData.get("customerId") as string;
+  const accountOpenedAtValue = formData.get("accountOpenedAt") as string;
+
+  if (!customerId) {
+    throw new Error("Customer not found.");
+  }
+
+  if (!accountOpenedAtValue) {
+    throw new Error("Account opening date is required.");
+  }
+
+  const accountOpenedAt = new Date(`${accountOpenedAtValue}T00:00:00`);
+
+  if (isNaN(accountOpenedAt.getTime())) {
+    throw new Error("Invalid account opening date.");
+  }
+
+  const customer = await prisma.customer.findUnique({
+    where: {
+      id: customerId,
+    },
+  });
+
+  if (!customer) {
+    throw new Error("Customer not found.");
+  }
+
+  await prisma.customer.update({
+    where: {
+      id: customerId,
+    },
+    data: {
+      accountOpenedAt,
+    },
+  });
+
+  redirect(`/admin/accounts/${customerId}`);
+}
+
 export async function generateTransferCode(formData: FormData) {
   const transferId = formData.get("transferId") as string;
 
   const randomNumber = Math.floor(100000 + Math.random() * 900000);
 
-const code = `INT-${new Date().getFullYear()}-${randomNumber}`;
+  const code = `INT-${new Date().getFullYear()}-${randomNumber}`;
 
   await prisma.internationalTransfer.update({
     where: {
@@ -222,6 +267,7 @@ const code = `INT-${new Date().getFullYear()}-${randomNumber}`;
 
   redirect(`/admin/international-transfers/${transferId}`);
 }
+
 export async function updateTransferStatus(formData: FormData) {
   const transferId = formData.get("transferId") as string;
   const status = formData.get("status") as string;
@@ -237,6 +283,7 @@ export async function updateTransferStatus(formData: FormData) {
 
   redirect(`/admin/international-transfers/${transferId}`);
 }
+
 export async function verifyTransferCode(formData: FormData) {
   const transferId = formData.get("transferId") as string;
   const code = formData.get("code") as string;

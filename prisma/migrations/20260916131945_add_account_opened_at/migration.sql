@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Customer" ADD COLUMN     "accountOpenedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;

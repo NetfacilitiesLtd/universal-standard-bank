@@ -69,9 +69,9 @@ export default async function AccountsPage() {
 
                 <span className="font-bold text-lg">
                   {new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: customer.application.preferredCurrency,
-}).format(customer.balance)}
+                    style: "currency",
+                    currency: customer.application.preferredCurrency,
+                  }).format(customer.balance)}
                 </span>
               </div>
 
@@ -81,7 +81,7 @@ export default async function AccountsPage() {
                 </span>
 
                 <span className="font-semibold">
-                  {new Date(customer.createdAt).toLocaleDateString()}
+                  {new Date(customer.accountOpenedAt).toLocaleDateString()}
                 </span>
               </div>
             </div>

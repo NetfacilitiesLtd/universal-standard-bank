@@ -44,6 +44,7 @@ model Customer {
   accountNumber          String                  @unique
   balance                Float                   @default(0)
   accountStatus          String                  @default("Active")
+  accountOpenedAt        DateTime                @default(now())
   createdAt              DateTime                @default(now())
   updatedAt              DateTime                @updatedAt
   application            Application             @relation(fields: [applicationId], references: [id])
@@ -80,7 +81,7 @@ model InternationalTransfer {
   amount           Float
   purpose          String
   description      String?
-  status           String   @default("Pending Transfer Code")
+  status            String   @default("Pending Transfer Code")
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
   transferCode     String?

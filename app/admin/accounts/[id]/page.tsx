@@ -1,7 +1,11 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
-import { updateAccountStatus } from "@/lib/actions/customer";
+import {
+  updateAccountOpenedAt,
+  updateAccountStatus,
+} from "@/lib/actions/customer";
 import DeleteCustomerButton from "@/components/admin/DeleteCustomerButton";
+
 export default async function ManageAccountPage({
   params,
 }: {
@@ -27,131 +31,186 @@ export default async function ManageAccountPage({
   if (!customer) {
     return <div>Customer not found.</div>;
   }
+
+  const accountOpenedDate = new Date(customer.accountOpenedAt)
+    .toISOString()
+    .split("T")[0];
+
   return (
     <div className="space-y-8">
       <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
-  <h2 className="text-2xl font-bold text-slate-900">
-  {customer.application.firstName} {customer.application.lastName}
-</h2>
+        <h2 className="text-2xl font-bold text-slate-900">
+          {customer.application.firstName}{" "}
+          {customer.application.lastName}
+        </h2>
 
-<p className="text-slate-500 mt-2">
-  {customer.accountNumber}
-</p>
-<div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+        <p className="text-slate-500 mt-2">
+          {customer.accountNumber}
+        </p>
 
-  <div>
-    <p className="text-sm text-slate-500">Account Type</p>
-    <p className="font-semibold">
-      {customer.application.accountType}
-    </p>
-  </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+          <div>
+            <p className="text-sm text-slate-500">Account Type</p>
+            <p className="font-semibold">
+              {customer.application.accountType}
+            </p>
+          </div>
 
-  <div>
-    <p className="text-sm text-slate-500">Status</p>
-    <p className="font-semibold">
-      {customer.accountStatus}
-    </p>
-  </div>
-<div>
-  <p className="text-sm text-slate-500">Balance</p>
-  <p className="font-semibold">
-    {new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: customer.application.preferredCurrency,
-    }).format(customer.balance)}
-  </p>
-</div>
-<div>
-  <p className="text-sm text-slate-500">Currency</p>
-  <p className="font-semibold">
-    {customer.application.preferredCurrency}
-  </p>
-</div>
-<div>
-  <p className="text-sm text-slate-500">Email</p>
-  <p className="font-semibold">
-    {customer.application.email}
-  </p>
-</div>
-<div>
-  <p className="text-sm text-slate-500">Phone Number</p>
-  <p className="font-semibold">
-    {customer.application.phoneNumber}
-  </p>
-</div>
-<div>
-  <p className="text-sm text-slate-500">Date Opened</p>
-  <p className="font-semibold">
-    {new Date(customer.createdAt).toLocaleDateString()}
-  </p>
-</div>
+          <div>
+            <p className="text-sm text-slate-500">Status</p>
+            <p className="font-semibold">
+              {customer.accountStatus}
+            </p>
+          </div>
 
-</div>
+          <div>
+            <p className="text-sm text-slate-500">Balance</p>
+            <p className="font-semibold">
+              {new Intl.NumberFormat("en-US", {
+                style: "currency",
+                currency: customer.application.preferredCurrency,
+              }).format(customer.balance)}
+            </p>
+          </div>
 
-</div>
+          <div>
+            <p className="text-sm text-slate-500">Currency</p>
+            <p className="font-semibold">
+              {customer.application.preferredCurrency}
+            </p>
+          </div>
 
-<div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
-  <h2 className="text-2xl font-bold text-slate-900 mb-6">
-    Account Actions
-  </h2>
+          <div>
+            <p className="text-sm text-slate-500">Email</p>
+            <p className="font-semibold">
+              {customer.application.email}
+            </p>
+          </div>
 
-  <div className="flex flex-wrap gap-4">
+          <div>
+            <p className="text-sm text-slate-500">Phone Number</p>
+            <p className="font-semibold">
+              {customer.application.phoneNumber}
+            </p>
+          </div>
 
-  <Link
-  href={`/admin/customers/${customer.id}/deposit`}
-  className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl font-medium transition inline-flex items-center justify-center"
->
-  Deposit
-</Link>
+          <div>
+            <p className="text-sm text-slate-500">Date Opened</p>
+            <p className="font-semibold">
+              {new Date(customer.accountOpenedAt).toLocaleDateString()}
+            </p>
+          </div>
+        </div>
+      </div>
 
-  <Link
-  href={`/admin/customers/${customer.id}/withdraw`}
-  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-medium transition inline-flex items-center justify-center"
->
-  Withdraw
-</Link>
+      {/* Account Opening Date */}
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+        <h2 className="text-2xl font-bold text-slate-900 mb-2">
+          Account Opening Date
+        </h2>
 
-  <form action={updateAccountStatus}>
-  <input
-    type="hidden"
-    name="customerId"
-    value={customer.id}
-  />
+        <p className="text-slate-500 mb-6">
+          Update the official opening date for this account.
+        </p>
 
-  <input
-    type="hidden"
-    name="accountStatus"
-    value={customer.accountStatus === "Active" ? "Frozen" : "Active"}
-  />
+        <form action={updateAccountOpenedAt} className="max-w-md">
+          <input
+            type="hidden"
+            name="customerId"
+            value={customer.id}
+          />
 
-  <button
-    type="submit"
-    className={`${
-      customer.accountStatus === "Active"
-        ? "bg-red-600 hover:bg-red-700"
-        : "bg-emerald-600 hover:bg-emerald-700"
-    } text-white px-6 py-3 rounded-xl font-medium transition`}
-  >
-    {customer.accountStatus === "Active"
-      ? "Freeze Account"
-      : "Activate Account"}
-  </button>
-</form>
+          <label
+            htmlFor="accountOpenedAt"
+            className="block text-sm font-medium text-slate-700 mb-2"
+          >
+            Date Opened
+          </label>
 
-  <DeleteCustomerButton customerId={customer.id} />
+          <div className="flex flex-col sm:flex-row gap-3">
+            <input
+              id="accountOpenedAt"
+              name="accountOpenedAt"
+              type="date"
+              defaultValue={accountOpenedDate}
+              required
+              className="border border-slate-300 rounded-xl px-4 py-3 text-slate-900 outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+            />
 
-</div>
+            <button
+              type="submit"
+              className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-xl font-medium transition"
+            >
+              Update Date
+            </button>
+          </div>
+        </form>
+      </div>
 
-</div>
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+        <h2 className="text-2xl font-bold text-slate-900 mb-6">
+          Account Actions
+        </h2>
 
-<h1 className="text-4xl font-bold text-slate-900">
-  Customer Management
-</h1>
+        <div className="flex flex-wrap gap-4">
+          <Link
+            href={`/admin/customers/${customer.id}/deposit`}
+            className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl font-medium transition inline-flex items-center justify-center"
+          >
+            Deposit
+          </Link>
 
-<p className="text-slate-500">
-  Manage this customer's account.
-</p>
+          <Link
+            href={`/admin/customers/${customer.id}/withdraw`}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-medium transition inline-flex items-center justify-center"
+          >
+            Withdraw
+          </Link>
 
-</div>
-);
+          <form action={updateAccountStatus}>
+            <input
+              type="hidden"
+              name="customerId"
+              value={customer.id}
+            />
+
+            <input
+              type="hidden"
+              name="accountStatus"
+              value={
+                customer.accountStatus === "Active"
+                  ? "Frozen"
+                  : "Active"
+              }
+            />
+
+            <button
+              type="submit"
+              className={`${
+                customer.accountStatus === "Active"
+                  ? "bg-red-600 hover:bg-red-700"
+                  : "bg-emerald-600 hover:bg-emerald-700"
+              } text-white px-6 py-3 rounded-xl font-medium transition`}
+            >
+              {customer.accountStatus === "Active"
+                ? "Freeze Account"
+                : "Activate Account"}
+            </button>
+          </form>
+
+          <DeleteCustomerButton customerId={customer.id} />
+        </div>
+      </div>
+
+      <div>
+        <h1 className="text-4xl font-bold text-slate-900">
+          Customer Management
+        </h1>
+
+        <p className="text-slate-500">
+          Manage this customer's account.
+        </p>
+      </div>
+    </div>
+  );
 }
