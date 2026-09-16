@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import {
   Landmark,
   PiggyBank,
@@ -51,19 +52,35 @@ export default function PersonalBankingPage() {
       <Navbar />
 
       {/* Hero */}
-      <section className="relative overflow-hidden bg-white pt-36 pb-24">
-        
+      <section className="relative min-h-[760px] overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <Image
+            src="/images/personal-banking.png"
+            alt="Personal banking customer using mobile banking"
+            fill
+            priority
+            className="object-cover object-center"
+          />
 
-        <div className="relative max-w-7xl mx-auto px-6">
-          <div className="max-w-3xl">
-            <p className="uppercase tracking-[5px] text-red-500 text-sm font-semibold">
+          {/* White gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-white via-white/45 via-25% to-transparent" />
+
+          {/* Soft lower fade */}
+          <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-white/70 to-transparent" />
+        </div>
+
+        {/* Hero Content */}
+        <div className="relative z-10 max-w-7xl mx-auto px-6 pt-48 pb-28 min-h-[760px] flex items-center">
+          <div className="max-w-2xl">
+            <p className="uppercase tracking-[5px] text-red-600 text-sm font-semibold">
               Personal Banking
             </p>
 
             <h1 className="mt-5 text-5xl md:text-6xl font-bold text-slate-900 leading-tight">
               Banking Designed
               <br />
-              Around You
+              Around <span className="text-red-600">You</span>
             </h1>
 
             <p className="mt-6 text-lg md:text-xl text-slate-600 leading-8 max-w-2xl">
@@ -82,11 +99,11 @@ export default function PersonalBankingPage() {
               </Link>
 
               <Link
-  href="/login"
-  className="inline-flex items-center justify-center gap-2 rounded-xl bg-slate-900 px-7 py-4 font-semibold text-white transition hover:bg-slate-800"
->
-  Online Banking
-</Link>
+                href="/login"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-slate-900 bg-white/80 px-7 py-4 font-semibold text-slate-900 transition hover:bg-slate-900 hover:text-white"
+              >
+                Online Banking
+              </Link>
             </div>
           </div>
         </div>
