@@ -460,7 +460,7 @@ document
       status: 200,
       headers: {
         "Content-Type": "application/pdf",
-        "Content-Disposition": `attachment; filename="standard-union-bank-statement-${customer.accountNumber}.pdf"`,
+        "Content-Disposition": `attachment; filename="universal-standard-bank-statement-${customer.accountNumber}.pdf"`,
       },
     });
   } catch (error) {
