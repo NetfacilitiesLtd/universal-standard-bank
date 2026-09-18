@@ -1,14 +1,123 @@
 import { NextResponse } from "next/server";
 import PDFDocument from "pdfkit";
 import path from "path";
+import { cookies } from "next/headers";
 
 import { getCurrentCustomer } from "@/lib/currentCustomer";
 
 export const runtime = "nodejs";
 
+const translations = {
+  en: {
+    locale: "en-GB",
+    statement: "ACCOUNT STATEMENT",
+    generated: "Generated",
+    customerInformation: "CUSTOMER INFORMATION",
+    customerName: "CUSTOMER NAME",
+    accountNumber: "ACCOUNT NUMBER",
+    accountType: "ACCOUNT TYPE",
+    currency: "CURRENCY",
+    customerAddress: "CUSTOMER ADDRESS",
+    statementInformation: "STATEMENT INFORMATION",
+    statementPeriod: "STATEMENT PERIOD",
+    accountStatus: "ACCOUNT STATUS",
+    openingBalance: "OPENING BALANCE",
+    closingBalance: "CLOSING BALANCE",
+    accountSummary: "ACCOUNT SUMMARY",
+    totalDeposits: "TOTAL DEPOSITS",
+    totalWithdrawals: "TOTAL WITHDRAWALS",
+    currentBalance: "CURRENT BALANCE",
+    transactionHistory: "TRANSACTION HISTORY",
+    continued: "TRANSACTION HISTORY (CONTINUED)",
+    date: "DATE",
+    description: "DESCRIPTION",
+    reference: "REFERENCE",
+    type: "TYPE",
+    amount: "AMOUNT",
+    status: "STATUS",
+    noTransactions: "No transactions found.",
+    footer:
+      "This statement is generated electronically by Universal Standard Bank.",
+    page: "Page",
+  },
+
+  de: {
+    locale: "de-DE",
+    statement: "KONTOAUSZUG",
+    generated: "Erstellt",
+    customerInformation: "KUNDENINFORMATIONEN",
+    customerName: "KUNDENNAME",
+    accountNumber: "KONTONUMMER",
+    accountType: "KONTOTYP",
+    currency: "WÄHRUNG",
+    customerAddress: "KUNDENADRESSE",
+    statementInformation: "AUSZUGSINFORMATIONEN",
+    statementPeriod: "AUSZUGSZEITRAUM",
+    accountStatus: "KONTOSTATUS",
+    openingBalance: "ANFANGSSALDO",
+    closingBalance: "ENDSALDO",
+    accountSummary: "KONTOÜBERSICHT",
+    totalDeposits: "GESAMTEINZAHLUNGEN",
+    totalWithdrawals: "GESAMTAUSZAHLUNGEN",
+    currentBalance: "AKTUELLER KONTOSTAND",
+    transactionHistory: "TRANSAKTIONSVERLAUF",
+    continued: "TRANSAKTIONSVERLAUF (FORTSETZUNG)",
+    date: "DATUM",
+    description: "BESCHREIBUNG",
+    reference: "REFERENZ",
+    type: "TYP",
+    amount: "BETRAG",
+    status: "STATUS",
+    noTransactions: "Keine Transaktionen gefunden.",
+    footer:
+      "Dieser Kontoauszug wurde elektronisch von der Universal Standard Bank erstellt.",
+    page: "Seite",
+  },
+
+  fr: {
+    locale: "fr-FR",
+    statement: "RELEVÉ DE COMPTE",
+    generated: "Généré",
+    customerInformation: "INFORMATIONS CLIENT",
+    customerName: "NOM DU CLIENT",
+    accountNumber: "NUMÉRO DE COMPTE",
+    accountType: "TYPE DE COMPTE",
+    currency: "DEVISE",
+    customerAddress: "ADRESSE DU CLIENT",
+    statementInformation: "INFORMATIONS DU RELEVÉ",
+    statementPeriod: "PÉRIODE DU RELEVÉ",
+    accountStatus: "STATUT DU COMPTE",
+    openingBalance: "SOLDE D'OUVERTURE",
+    closingBalance: "SOLDE DE CLÔTURE",
+    accountSummary: "RÉSUMÉ DU COMPTE",
+    totalDeposits: "TOTAL DES DÉPÔTS",
+    totalWithdrawals: "TOTAL DES RETRAITS",
+    currentBalance: "SOLDE ACTUEL",
+    transactionHistory: "HISTORIQUE DES TRANSACTIONS",
+    continued: "HISTORIQUE DES TRANSACTIONS (SUITE)",
+    date: "DATE",
+    description: "DESCRIPTION",
+    reference: "RÉFÉRENCE",
+    type: "TYPE",
+    amount: "MONTANT",
+    status: "STATUT",
+    noTransactions: "Aucune transaction trouvée.",
+    footer:
+      "Ce relevé est généré électroniquement par Universal Standard Bank.",
+    page: "Page",
+  },
+} as const;
+
 export async function GET() {
   try {
     const customer = await getCurrentCustomer();
+
+    const cookieStore = await cookies();
+    const language = cookieStore.get("usb-language")?.value ?? "en";
+
+    const t =
+      translations[language as keyof typeof translations] ??
+      translations.en;
 
     const fullName = [
       customer.application.firstName,
@@ -69,14 +178,14 @@ export async function GET() {
       })}`;
 
     const formatDate = (date: Date) =>
-      date.toLocaleDateString("en-GB", {
+      date.toLocaleDateString(t.locale, {
         day: "2-digit",
         month: "short",
         year: "numeric",
       });
 
     const formatLongDate = (date: Date) =>
-      date.toLocaleDateString("en-GB", {
+      date.toLocaleDateString(t.locale, {
         day: "2-digit",
         month: "long",
         year: "numeric",
@@ -103,10 +212,10 @@ export async function GET() {
     });
 
     const logoPath = path.join(
-  process.cwd(),
-  "public",
-  "logo.png"
-);
+      process.cwd(),
+      "public",
+      "logo.png"
+    );
 
     /*
      * Header
@@ -123,19 +232,19 @@ export async function GET() {
       .text("UNIVERSAL STANDARD BANK", 195, 48);
 
     document
-  .font("Helvetica")
-  .fontSize(9)
-  .fillColor("#64748b")
-  .text("33 St James's Square", 195, 88)
-  .text("St James's, London SW1Y 4JS", 195, 101)
-  .text("England", 195, 114)
-  .text("Tel: +44 79 536 23468  |  +44 73 554 53466", 195, 127);
+      .font("Helvetica")
+      .fontSize(9)
+      .fillColor("#64748b")
+      .text("33 St James's Square", 195, 88)
+      .text("St James's, London SW1Y 4JS", 195, 101)
+      .text("England", 195, 114)
+      .text("Tel: +44 79 536 23468  |  +44 73 554 53466", 195, 127);
 
     document
       .font("Helvetica-Bold")
       .fontSize(16)
       .fillColor("#0f172a")
-      .text("ACCOUNT STATEMENT", 350, 145, {
+      .text(t.statement, 350, 145, {
         width: 195,
         align: "right",
       });
@@ -144,7 +253,7 @@ export async function GET() {
       .font("Helvetica")
       .fontSize(9)
       .fillColor("#64748b")
-      .text(`Generated: ${formatLongDate(new Date())}`, 350, 168, {
+      .text(`${t.generated}: ${formatLongDate(new Date())}`, 350, 168, {
         width: 195,
         align: "right",
       });
@@ -164,7 +273,7 @@ export async function GET() {
       .font("Helvetica-Bold")
       .fontSize(12)
       .fillColor("#0f172a")
-      .text("CUSTOMER INFORMATION", 50, 215);
+      .text(t.customerInformation, 50, 215);
 
     document
       .roundedRect(50, 237, 495, 145, 8)
@@ -175,120 +284,120 @@ export async function GET() {
       .font("Helvetica-Bold")
       .fontSize(9)
       .fillColor("#475569")
-      .text("CUSTOMER NAME", 68, 255)
-.text("ACCOUNT NUMBER", 310, 255)
-.text("ACCOUNT TYPE", 68, 298)
-.text("CURRENCY", 310, 298)
-.text("CUSTOMER ADDRESS", 68, 341);
+      .text(t.customerName, 68, 255)
+      .text(t.accountNumber, 310, 255)
+      .text(t.accountType, 68, 298)
+      .text(t.currency, 310, 298)
+      .text(t.customerAddress, 68, 341);
 
     document
       .font("Helvetica")
       .fontSize(10)
       .fillColor("#0f172a")
       .text(fullName, 68, 270)
-.text(customer.accountNumber, 310, 270)
-.text(customer.application.accountType, 68, 313)
-.text(currency, 310, 313)
-.text(
-  [
-    customer.application.residentialAddress,
-    customer.application.city,
-    customer.application.state,
-    customer.application.postalCode,
-    customer.application.country,
-  ]
-    .filter(Boolean)
-    .join(", "),
-  68,
-  356,
-  {
-    width: 430,
-  }
-);
+      .text(customer.accountNumber, 310, 270)
+      .text(customer.application.accountType, 68, 313)
+      .text(currency, 310, 313)
+      .text(
+        [
+          customer.application.residentialAddress,
+          customer.application.city,
+          customer.application.state,
+          customer.application.postalCode,
+          customer.application.country,
+        ]
+          .filter(Boolean)
+          .join(", "),
+        68,
+        356,
+        {
+          width: 430,
+        }
+      );
 
-   /*
- * Statement Information
- */
+    /*
+     * Statement Information
+     */
 
-document
-  .font("Helvetica-Bold")
-  .fontSize(12)
-  .fillColor("#0f172a")
-  .text("STATEMENT INFORMATION", 50, 415);
+    document
+      .font("Helvetica-Bold")
+      .fontSize(12)
+      .fillColor("#0f172a")
+      .text(t.statementInformation, 50, 415);
 
-document
-  .roundedRect(50, 437, 495, 88, 8)
-  .fillColor("#e2e8f0")
-  .fill();
+    document
+      .roundedRect(50, 437, 495, 88, 8)
+      .fillColor("#e2e8f0")
+      .fill();
 
-document
-  .font("Helvetica-Bold")
-  .fontSize(9)
-  .fillColor("#475569")
-  .text("STATEMENT PERIOD", 68, 455)
-  .text("ACCOUNT STATUS", 310, 455)
-  .text("OPENING BALANCE", 68, 490)
-  .text("CLOSING BALANCE", 310, 490);
+    document
+      .font("Helvetica-Bold")
+      .fontSize(9)
+      .fillColor("#475569")
+      .text(t.statementPeriod, 68, 455)
+      .text(t.accountStatus, 310, 455)
+      .text(t.openingBalance, 68, 490)
+      .text(t.closingBalance, 310, 490);
 
-document
-  .font("Helvetica")
-  .fontSize(10)
-  .fillColor("#0f172a")
-  .text(
-    `${formatDate(statementStart)} - ${formatDate(statementEnd)}`,
-    68,
-    470
-  )
-  .text(customer.accountStatus, 310, 470)
-  .text(formatMoney(openingBalance), 68, 505)
-  .text(formatMoney(customer.balance), 310, 505);
+    document
+      .font("Helvetica")
+      .fontSize(10)
+      .fillColor("#0f172a")
+      .text(
+        `${formatDate(statementStart)} - ${formatDate(statementEnd)}`,
+        68,
+        470
+      )
+      .text(customer.accountStatus, 310, 470)
+      .text(formatMoney(openingBalance), 68, 505)
+      .text(formatMoney(customer.balance), 310, 505);
 
-/*
- * Account Summary
- */
+    /*
+     * Account Summary
+     */
 
-document
-  .font("Helvetica-Bold")
-  .fontSize(12)
-  .fillColor("#0f172a")
-  .text("ACCOUNT SUMMARY", 50, 555);
+    document
+      .font("Helvetica-Bold")
+      .fontSize(12)
+      .fillColor("#0f172a")
+      .text(t.accountSummary, 50, 555);
 
-document
-  .roundedRect(50, 577, 155, 70, 8)
-  .fillColor("#f0fdf4")
-  .fill();
+    document
+      .roundedRect(50, 577, 155, 70, 8)
+      .fillColor("#f0fdf4")
+      .fill();
 
-document
-  .roundedRect(220, 577, 155, 70, 8)
-  .fillColor("#fef2f2")
-  .fill();
+    document
+      .roundedRect(220, 577, 155, 70, 8)
+      .fillColor("#fef2f2")
+      .fill();
 
-document
-  .roundedRect(390, 577, 155, 70, 8)
-  .fillColor("#eff6ff")
-  .fill();
+    document
+      .roundedRect(390, 577, 155, 70)
+      .fillColor("#eff6ff")
+      .fill();
 
-document
-  .font("Helvetica-Bold")
-  .fontSize(8)
-  .fillColor("#475569")
-  .text("TOTAL DEPOSITS", 65, 592)
-  .text("TOTAL WITHDRAWALS", 235, 592)
-  .text("CURRENT BALANCE", 405, 592);
+    document
+      .font("Helvetica-Bold")
+      .fontSize(8)
+      .fillColor("#475569")
+      .text(t.totalDeposits, 65, 592)
+      .text(t.totalWithdrawals, 235, 592)
+      .text(t.currentBalance, 405, 592);
 
-document
-  .font("Helvetica-Bold")
-  .fontSize(13)
-  .fillColor("#15803d")
-  .text(formatMoney(totalDeposits), 65, 615);
+    document
+      .font("Helvetica-Bold")
+      .fontSize(13)
+      .fillColor("#15803d")
+      .text(formatMoney(totalDeposits), 65, 615);
 
-document
-  .fillColor("#dc2626")
-  .text(formatMoney(totalWithdrawals), 235, 615);
+    document
+      .fillColor("#dc2626")
+      .text(formatMoney(totalWithdrawals), 235, 615);
 
-document
-  .fillColor("#1d4ed8")
-  .text(formatMoney(customer.balance), 405, 615);
+    document
+      .fillColor("#1d4ed8")
+      .text(formatMoney(customer.balance), 405, 615);
 
     /*
      * Transaction History
@@ -298,7 +407,7 @@ document
       .font("Helvetica-Bold")
       .fontSize(12)
       .fillColor("#0f172a")
-      .text("TRANSACTION HISTORY", 50, 650);
+      .text(t.transactionHistory, 50, 650);
 
     const drawTableHeader = () => {
       const y = document.y + 10;
@@ -312,15 +421,15 @@ document
         .font("Helvetica-Bold")
         .fontSize(8)
         .fillColor("#334155")
-        .text("DATE", 58, y + 8, { width: 58 })
-        .text("DESCRIPTION", 116, y + 8, { width: 120 })
-        .text("REFERENCE", 236, y + 8, { width: 100 })
-        .text("TYPE", 336, y + 8, { width: 70 })
-        .text("AMOUNT", 406, y + 8, {
+        .text(t.date, 58, y + 8, { width: 58 })
+        .text(t.description, 116, y + 8, { width: 120 })
+        .text(t.reference, 236, y + 8, { width: 100 })
+        .text(t.type, 336, y + 8, { width: 70 })
+        .text(t.amount, 406, y + 8, {
           width: 70,
           align: "right",
         })
-        .text("STATUS", 476, y + 8, {
+        .text(t.status, 476, y + 8, {
           width: 65,
           align: "right",
         });
@@ -338,7 +447,7 @@ document
           .font("Helvetica-Bold")
           .fontSize(12)
           .fillColor("#0f172a")
-          .text("TRANSACTION HISTORY (CONTINUED)", 50, 50);
+          .text(t.continued, 50, 50);
 
         document.y = 75;
 
@@ -408,7 +517,7 @@ document
         .font("Helvetica")
         .fontSize(9)
         .fillColor("#64748b")
-        .text("No transactions found.", {
+        .text(t.noTransactions, {
           align: "center",
         });
     }
@@ -430,28 +539,24 @@ document
         .font("Helvetica")
         .fontSize(8)
         .fillColor("#64748b")
-        .text(
-  "This statement is generated electronically by Universal Standard Bank.",
-  50,
-  750,
-  {
-    width: 495,
-    align: "center",
-  }
-);
+        .text(t.footer, 50, 750, {
+          width: 495,
+          align: "center",
+        });
 
-document
-  .fontSize(8)
-  .text(
-    `Page ${pageIndex + 1} of ${pageRange.count}`,
-    50,
-    765,
-    {
-      width: 495,
-      align: "center",
+      document
+        .fontSize(8)
+        .text(
+          `${t.page} ${pageIndex + 1} of ${pageRange.count}`,
+          50,
+          765,
+          {
+            width: 495,
+            align: "center",
+          }
+        );
     }
-  );
-}
+
     document.end();
 
     const pdfBuffer = await pdfPromise;
