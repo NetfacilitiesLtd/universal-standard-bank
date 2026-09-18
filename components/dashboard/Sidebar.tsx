@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import {
   LayoutDashboard,
   Wallet,
@@ -11,37 +12,128 @@ import {
   Settings,
   LogOut,
 } from "lucide-react";
+import {
+  LANGUAGE_COOKIE,
+  SUPPORTED_LANGUAGES,
+  type SupportedLanguage,
+} from "@/lib/i18n/language";
 
 const menuItems = [
   {
-    title: "Dashboard",
+    key: "dashboard",
     icon: LayoutDashboard,
     href: "/dashboard",
   },
   {
-    title: "My Accounts",
+    key: "accounts",
     icon: Wallet,
     href: "/dashboard/accounts",
   },
   {
-    title: "Transfer Money",
+    key: "transfer",
     icon: ArrowLeftRight,
     href: "/dashboard/transfers",
   },
   {
-    title: "Transactions",
+    key: "transactions",
     icon: ReceiptText,
     href: "/dashboard/transactions",
   },
   {
-    title: "Settings",
+    key: "settings",
     icon: Settings,
     href: "/dashboard/settings",
   },
 ];
 
+const translations: Record<
+  SupportedLanguage,
+  {
+    mainMenu: string;
+    dashboard: string;
+    accounts: string;
+    transfer: string;
+    transactions: string;
+    settings: string;
+    logout: string;
+  }
+> = {
+  en: {
+    mainMenu: "Main Menu",
+    dashboard: "Dashboard",
+    accounts: "My Accounts",
+    transfer: "Transfer Money",
+    transactions: "Transactions",
+    settings: "Settings",
+    logout: "Logout",
+  },
+
+  de: {
+    mainMenu: "Hauptmenü",
+    dashboard: "Dashboard",
+    accounts: "Meine Konten",
+    transfer: "Geld überweisen",
+    transactions: "Transaktionen",
+    settings: "Einstellungen",
+    logout: "Abmelden",
+  },
+
+  fr: {
+    mainMenu: "Menu principal",
+    dashboard: "Tableau de bord",
+    accounts: "Mes comptes",
+    transfer: "Transférer de l'argent",
+    transactions: "Transactions",
+    settings: "Paramètres",
+    logout: "Déconnexion",
+  },
+};
+
 export default function Sidebar() {
   const pathname = usePathname();
+
+  const [language, setLanguage] =
+    useState<SupportedLanguage>("en");
+
+  useEffect(() => {
+    const match = document.cookie.match(
+      new RegExp(`(?:^|; )${LANGUAGE_COOKIE}=([^;]*)`)
+    );
+
+    if (
+      match &&
+      SUPPORTED_LANGUAGES.includes(
+        match[1] as SupportedLanguage
+      )
+    ) {
+      setLanguage(match[1] as SupportedLanguage);
+    }
+
+    const handleLanguageChange = (event: Event) => {
+      const customEvent =
+        event as CustomEvent<SupportedLanguage>;
+
+      if (
+        SUPPORTED_LANGUAGES.includes(customEvent.detail)
+      ) {
+        setLanguage(customEvent.detail);
+      }
+    };
+
+    window.addEventListener(
+      "language-change",
+      handleLanguageChange
+    );
+
+    return () => {
+      window.removeEventListener(
+        "language-change",
+        handleLanguageChange
+      );
+    };
+  }, []);
+
+  const t = translations[language];
 
   return (
     <aside className="w-72 min-h-screen bg-white border-r border-slate-200 flex flex-col">
@@ -61,7 +153,7 @@ export default function Sidebar() {
 
       <nav className="flex-1 px-5 py-8">
         <p className="uppercase tracking-[4px] text-xs text-slate-400 mb-6 px-4">
-          Main Menu
+          {t.mainMenu}
         </p>
 
         <div className="space-y-2">
@@ -73,9 +165,20 @@ export default function Sidebar() {
               (item.href !== "/dashboard" &&
                 pathname.startsWith(item.href));
 
+            const title =
+              item.key === "dashboard"
+                ? t.dashboard
+                : item.key === "accounts"
+                ? t.accounts
+                : item.key === "transfer"
+                ? t.transfer
+                : item.key === "transactions"
+                ? t.transactions
+                : t.settings;
+
             return (
               <Link
-                key={item.title}
+                key={item.key}
                 href={item.href}
                 className={`flex items-center gap-4 px-4 py-4 rounded-xl transition-all duration-300 ${
                   isActive
@@ -86,7 +189,7 @@ export default function Sidebar() {
                 <Icon size={22} />
 
                 <span className="font-medium">
-                  {item.title}
+                  {title}
                 </span>
               </Link>
             );
@@ -104,7 +207,7 @@ export default function Sidebar() {
           <LogOut size={22} />
 
           <span className="font-medium">
-            Logout
+            {t.logout}
           </span>
         </Link>
       </div>

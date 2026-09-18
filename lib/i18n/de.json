@@ -1,0 +1,98 @@
+{
+  "nav": {
+    "home": "Startseite",
+    "personalBanking": "Privatkundengeschäft",
+    "businessBanking": "Geschäftskunden",
+    "internationalBanking": "Internationales Banking",
+    "cardsPayments": "Karten & Zahlungen",
+    "contact": "Kontakt",
+    "login": "Anmelden",
+    "openAccount": "Konto eröffnen"
+  },
+  "common": {
+    "learnMore": "Mehr erfahren",
+    "getStarted": "Jetzt starten",
+    "readMore": "Mehr lesen",
+    "contactUs": "Kontaktieren Sie uns",
+    "submit": "Absenden",
+    "cancel": "Abbrechen",
+    "save": "Speichern",
+    "back": "Zurück",
+    "next": "Weiter",
+    "close": "Schließen"
+  },
+  "language": {
+    "label": "Sprache",
+    "english": "English",
+    "german": "Deutsch",
+    "french": "Français"
+  },
+  "bank": {
+    "name": "Universal Standard Bank"
+  },
+  "hero": {
+    "badge": "Banking mit Vertrauen",
+    "headingLine1": "Ihr vertrauenswürdiger",
+    "headingLine2": "Partner",
+    "headingLine3": "für eine",
+    "headingHighlight1": "bessere",
+    "headingHighlight2": "finanzielle",
+    "headingHighlight3": "Zukunft",
+    "description": "Die Universal Standard Bank bietet sichere und zuverlässige Finanzdienstleistungen, die Privatpersonen, Familien und Unternehmen dabei unterstützen, ihre Finanzen zu verwalten, zu entwickeln und zu schützen.",
+    "openAccount": "Konto eröffnen",
+    "internetBanking": "Online-Banking"
+  },
+  "stats": {
+    "happyCustomers": "Zufriedene Kunden",
+    "countriesServed": "Bediente Länder",
+    "businessPartners": "Geschäftspartner",
+    "digitalBanking": "Digitales Banking"
+  },
+  "services": {
+    "eyebrow": "Unsere Banking-Lösungen",
+    "headingLine1": "Bankprodukte",
+    "headingLine2": "Für jeden Bedarf",
+    "description": "Entdecken Sie sichere und zuverlässige Banking-Lösungen für Ihre täglichen Finanzen, Ihr Unternehmenswachstum und Ihre internationalen Bankgeschäfte.",
+    "personalBanking": {
+      "title": "Privatkundengeschäft",
+      "description": "Flexible Banking-Lösungen, die Ihnen helfen, Ihre täglichen Finanzen sicher und zuverlässig zu verwalten.",
+      "items": [
+        "Sparkonten",
+        "Girokonten",
+        "Privatkredite",
+        "Mobile Banking"
+      ]
+    },
+    "businessBanking": {
+      "title": "Geschäftsbanking",
+      "description": "Zuverlässige Finanzlösungen, die Unternehmen bei der Verwaltung von Geschäftsabläufen, Wachstum und Zahlungen unterstützen.",
+      "items": [
+        "Geschäftskonten",
+        "Gehaltsabrechnung",
+        "Handelsfinanzierung",
+        "Händlerdienste"
+      ]
+    },
+    "cardsPayments": {
+      "title": "Karten & Zahlungen",
+      "description": "Bequeme und sichere Zahlungslösungen für Ihre täglichen Einkäufe und Transaktionen.",
+      "items": [
+        "Debitkarten",
+        "Kreditkarten",
+        "Online-Zahlungen",
+        "Kontaktloses Banking"
+      ]
+    },
+    "internationalBanking": {
+      "title": "Internationales Banking",
+      "description": "Banking-Lösungen für internationale Überweisungen, Währungen und grenzüberschreitende Finanzbedürfnisse.",
+      "items": [
+        "Globale Überweisungen",
+        "Devisenhandel",
+        "Mehrere Währungen",
+        "Internationaler Support"
+      ]
+    },
+    "learnMore": "Mehr erfahren"
+  }
+}

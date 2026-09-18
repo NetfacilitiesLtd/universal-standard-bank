@@ -1,5 +1,12 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import {
+  LANGUAGE_COOKIE,
+  SUPPORTED_LANGUAGES,
+  type SupportedLanguage,
+} from "@/lib/i18n/language";
+
 type SupportingDocumentsProps = {
   formData: {
     passportPhoto: File | null;
@@ -8,10 +15,96 @@ type SupportingDocumentsProps = {
   setFormData: React.Dispatch<React.SetStateAction<any>>;
 };
 
+const translations: Record<
+  SupportedLanguage,
+  {
+    title: string;
+    description: string;
+    passportPhoto: string;
+    passportPhotoDescription: string;
+    governmentId: string;
+    governmentIdDescription: string;
+    selected: string;
+  }
+> = {
+  en: {
+    title: "Supporting Documents",
+    description:
+      "Upload the required documents to help us verify your identity and process your application.",
+    passportPhoto: "Passport Photograph",
+    passportPhotoDescription:
+      "Upload a recent passport-sized photograph.",
+    governmentId: "Government Issued ID",
+    governmentIdDescription:
+      "Passport, National ID, Driver's License or Residence Permit.",
+    selected: "Selected:",
+  },
+
+  de: {
+    title: "Erforderliche Dokumente",
+    description:
+      "Laden Sie die erforderlichen Dokumente hoch, damit wir Ihre Identität überprüfen und Ihren Antrag bearbeiten können.",
+    passportPhoto: "Passfoto",
+    passportPhotoDescription:
+      "Laden Sie ein aktuelles Passfoto hoch.",
+    governmentId: "Amtlicher Ausweis",
+    governmentIdDescription:
+      "Reisepass, Personalausweis, Führerschein oder Aufenthaltstitel.",
+    selected: "Ausgewählt:",
+  },
+
+  fr: {
+    title: "Documents justificatifs",
+    description:
+      "Téléchargez les documents requis afin de nous permettre de vérifier votre identité et de traiter votre demande.",
+    passportPhoto: "Photo d'identité",
+    passportPhotoDescription:
+      "Téléchargez une photo d'identité récente au format passeport.",
+    governmentId: "Pièce d'identité officielle",
+    governmentIdDescription:
+      "Passeport, carte d'identité, permis de conduire ou titre de séjour.",
+    selected: "Sélectionné :",
+  },
+};
+
 export default function SupportingDocuments({
   formData,
   setFormData,
 }: SupportingDocumentsProps) {
+  const [language, setLanguage] = useState<SupportedLanguage>("en");
+
+  useEffect(() => {
+    const match = document.cookie.match(
+      new RegExp(`(?:^|; )${LANGUAGE_COOKIE}=([^;]*)`)
+    );
+
+    if (
+      match &&
+      SUPPORTED_LANGUAGES.includes(match[1] as SupportedLanguage)
+    ) {
+      setLanguage(match[1] as SupportedLanguage);
+    }
+
+    const handleLanguageChange = (event: Event) => {
+      const customEvent = event as CustomEvent<SupportedLanguage>;
+
+      if (SUPPORTED_LANGUAGES.includes(customEvent.detail)) {
+        setLanguage(customEvent.detail);
+      }
+    };
+
+    window.addEventListener("language-change", handleLanguageChange);
+
+    return () => {
+      window.removeEventListener(
+        "language-change",
+        handleLanguageChange
+      );
+    };
+  }, []);
+
+  const t = translations[language];
+
   const handleFileChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -27,22 +120,21 @@ export default function SupportingDocuments({
     <section className="bg-white rounded-3xl shadow-sm border border-slate-200 p-8">
       <div className="mb-8">
         <h2 className="text-3xl font-bold text-slate-900">
-          Supporting Documents
+          {t.title}
         </h2>
 
         <p className="text-slate-500 mt-2">
-          Upload the required documents to help us verify your identity and
-          process your application.
+          {t.description}
         </p>
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
-
         {/* Passport Photograph */}
 
         <div>
           <label className="block text-sm font-semibold text-slate-700 mb-2">
-            Passport Photograph <span className="text-red-600">*</span>
+            {t.passportPhoto}{" "}
+            <span className="text-red-600">*</span>
           </label>
 
           <input
@@ -54,12 +146,12 @@ export default function SupportingDocuments({
           />
 
           <p className="text-sm text-slate-500 mt-2">
-            Upload a recent passport-sized photograph.
+            {t.passportPhotoDescription}
           </p>
 
           {formData.passportPhoto && (
             <p className="mt-2 text-sm text-green-600">
-              Selected: {formData.passportPhoto.name}
+              {t.selected} {formData.passportPhoto.name}
             </p>
           )}
         </div>
@@ -68,7 +160,8 @@ export default function SupportingDocuments({
 
         <div>
           <label className="block text-sm font-semibold text-slate-700 mb-2">
-            Government Issued ID <span className="text-red-600">*</span>
+            {t.governmentId}{" "}
+            <span className="text-red-600">*</span>
           </label>
 
           <input
@@ -80,16 +173,15 @@ export default function SupportingDocuments({
           />
 
           <p className="text-sm text-slate-500 mt-2">
-            Passport, National ID, Driver's License or Residence Permit.
+            {t.governmentIdDescription}
           </p>
 
           {formData.governmentId && (
             <p className="mt-2 text-sm text-green-600">
-              Selected: {formData.governmentId.name}
+              {t.selected} {formData.governmentId.name}
             </p>
           )}
         </div>
-
       </div>
     </section>
   );

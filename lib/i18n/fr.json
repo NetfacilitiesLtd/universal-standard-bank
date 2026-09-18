@@ -1,0 +1,98 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "personalBanking": "Banque personnelle",
+    "businessBanking": "Banque professionnelle",
+    "internationalBanking": "Services bancaires internationaux",
+    "cardsPayments": "Cartes et paiements",
+    "contact": "Contact",
+    "login": "Connexion",
+    "openAccount": "Ouvrir un compte"
+  },
+  "common": {
+    "learnMore": "En savoir plus",
+    "getStarted": "Commencer",
+    "readMore": "Lire la suite",
+    "contactUs": "Contactez-nous",
+    "submit": "Envoyer",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "back": "Retour",
+    "next": "Suivant",
+    "close": "Fermer"
+  },
+  "language": {
+    "label": "Langue",
+    "english": "English",
+    "german": "Deutsch",
+    "french": "Français"
+  },
+  "bank": {
+    "name": "Universal Standard Bank"
+  },
+  "hero": {
+    "badge": "Une banque en toute confiance",
+    "headingLine1": "Votre partenaire",
+    "headingLine2": "de confiance",
+    "headingLine3": "pour un",
+    "headingHighlight1": "meilleur",
+    "headingHighlight2": "avenir",
+    "headingHighlight3": "financier",
+    "description": "Universal Standard Bank propose des services financiers sûrs et fiables conçus pour aider les particuliers, les familles et les entreprises à gérer, développer et protéger leurs finances.",
+    "openAccount": "Ouvrir un compte",
+    "internetBanking": "Banque en ligne"
+  },
+  "stats": {
+    "happyCustomers": "Clients satisfaits",
+    "countriesServed": "Pays desservis",
+    "businessPartners": "Partenaires commerciaux",
+    "digitalBanking": "Services bancaires numériques"
+  },
+  "services": {
+    "eyebrow": "Nos solutions bancaires",
+    "headingLine1": "Produits bancaires",
+    "headingLine2": "Pour chaque besoin",
+    "description": "Découvrez des solutions bancaires sûres et fiables conçues pour répondre à vos besoins financiers quotidiens, soutenir la croissance de votre entreprise et faciliter vos opérations bancaires internationales.",
+    "personalBanking": {
+      "title": "Banque personnelle",
+      "description": "Des solutions bancaires flexibles conçues pour vous aider à gérer vos finances quotidiennes en toute confiance.",
+      "items": [
+        "Comptes d'épargne",
+        "Comptes courants",
+        "Prêts personnels",
+        "Banque mobile"
+      ]
+    },
+    "businessBanking": {
+      "title": "Banque professionnelle",
+      "description": "Des solutions financières fiables pour aider les entreprises à gérer leurs activités, leur croissance et leurs paiements.",
+      "items": [
+        "Comptes professionnels",
+        "Solutions de paie",
+        "Financement du commerce",
+        "Services aux commerçants"
+      ]
+    },
+    "cardsPayments": {
+      "title": "Cartes et paiements",
+      "description": "Des solutions de paiement pratiques et sécurisées pour vos achats et transactions quotidiens.",
+      "items": [
+        "Cartes de débit",
+        "Cartes de crédit",
+        "Paiements en ligne",
+        "Paiement sans contact"
+      ]
+    },
+    "internationalBanking": {
+      "title": "Services bancaires internationaux",
+      "description": "Des solutions bancaires conçues pour les transferts internationaux, les devises et les besoins financiers transfrontaliers.",
+      "items": [
+        "Transferts internationaux",
+        "Change de devises",
+        "Multi-devises",
+        "Assistance internationale"
+      ]
+    },
+    "learnMore": "En savoir plus"
+  }
+}

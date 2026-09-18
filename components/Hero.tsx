@@ -1,7 +1,89 @@
+"use client";
+
 import Link from "next/link";
 import { ShieldCheck } from "lucide-react";
+import { useEffect, useState } from "react";
+import type { SupportedLanguage } from "@/lib/i18n/language";
+
+const translations = {
+  en: {
+    badge: "Banking with confidence",
+    headingLine1: "Your Trusted",
+    headingLine2: "Partner",
+    headingLine3: "for a",
+    headingHighlight1: "Better",
+    headingHighlight2: "Financial",
+    headingHighlight3: "Future",
+    description:
+      "Universal Standard Bank provides secure and reliable financial services designed to help individuals, families, and businesses manage, grow, and protect their finances.",
+    openAccount: "Open an Account",
+    internetBanking: "Internet Banking",
+  },
+  de: {
+    badge: "Banking mit Vertrauen",
+    headingLine1: "Ihr vertrauenswürdiger",
+    headingLine2: "Partner",
+    headingLine3: "für eine",
+    headingHighlight1: "bessere",
+    headingHighlight2: "finanzielle",
+    headingHighlight3: "Zukunft",
+    description:
+      "Die Universal Standard Bank bietet sichere und zuverlässige Finanzdienstleistungen, die Privatpersonen, Familien und Unternehmen dabei unterstützen, ihre Finanzen zu verwalten, zu entwickeln und zu schützen.",
+    openAccount: "Konto eröffnen",
+    internetBanking: "Online-Banking",
+  },
+  fr: {
+    badge: "Une banque en toute confiance",
+    headingLine1: "Votre partenaire",
+    headingLine2: "de confiance",
+    headingLine3: "pour un",
+    headingHighlight1: "meilleur",
+    headingHighlight2: "avenir",
+    headingHighlight3: "financier",
+    description:
+      "Universal Standard Bank propose des services financiers sûrs et fiables conçus pour aider les particuliers, les familles et les entreprises à gérer, développer et protéger leurs finances.",
+    openAccount: "Ouvrir un compte",
+    internetBanking: "Banque en ligne",
+  },
+};
 
 export default function Hero() {
+  const [language, setLanguage] = useState<SupportedLanguage>("en");
+
+  useEffect(() => {
+    const match = document.cookie.match(
+      /(?:^|; )usb-language=([^;]*)/
+    );
+
+    if (
+      match &&
+      (match[1] === "en" ||
+        match[1] === "de" ||
+        match[1] === "fr")
+    ) {
+      setLanguage(match[1] as SupportedLanguage);
+    }
+
+    const handleLanguageChange = (event: Event) => {
+      const customEvent = event as CustomEvent<SupportedLanguage>;
+      setLanguage(customEvent.detail);
+    };
+
+    window.addEventListener(
+      "language-change",
+      handleLanguageChange
+    );
+
+    return () => {
+      window.removeEventListener(
+        "language-change",
+        handleLanguageChange
+      );
+    };
+  }, []);
+
+  const t = translations[language];
+
   return (
     <section
       id="home"
@@ -20,28 +102,32 @@ export default function Hero() {
           {/* Trust Badge */}
           <div className="inline-flex items-center gap-2 rounded-full border border-red-200 bg-white/60 px-5 py-2 text-sm font-medium text-red-600 mb-5">
             <ShieldCheck size={18} />
-            <span>Banking with confidence</span>
+            <span>{t.badge}</span>
           </div>
 
           {/* Main Heading */}
           <h1 className="text-5xl lg:text-6xl font-black leading-[0.92] tracking-tight text-slate-900">
-            Your Trusted
+            {t.headingLine1}
             <br />
-            Partner
+            {t.headingLine2}
             <br />
-            for a{" "}
-            <span className="text-red-600">Better</span>
+            {t.headingLine3}{" "}
+            <span className="text-red-600">
+              {t.headingHighlight1}
+            </span>
             <br />
-            <span className="text-red-600">Financial</span>
+            <span className="text-red-600">
+              {t.headingHighlight2}
+            </span>
             <br />
-            <span className="text-red-600">Future</span>
+            <span className="text-red-600">
+              {t.headingHighlight3}
+            </span>
           </h1>
 
           {/* Description */}
           <p className="mt-5 max-w-[600px] text-lg lg:text-xl leading-7 text-slate-700">
-            Universal Standard Bank provides secure and reliable financial
-            services designed to help individuals, families, and businesses
-            manage, grow, and protect their finances.
+            {t.description}
           </p>
 
           {/* Buttons */}
@@ -50,14 +136,14 @@ export default function Hero() {
               href="/apply"
               className="bg-red-600 hover:bg-red-700 transition-all duration-300 text-white font-semibold px-9 py-4 rounded-xl shadow-lg"
             >
-              Open an Account
+              {t.openAccount}
             </Link>
 
             <Link
               href="#services"
               className="border-2 border-slate-900 text-slate-900 hover:bg-slate-900 hover:text-white transition-all duration-300 font-semibold px-9 py-4 rounded-xl"
             >
-              Internet Banking
+              {t.internetBanking}
             </Link>
           </div>
 

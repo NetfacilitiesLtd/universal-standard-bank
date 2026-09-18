@@ -1,3 +1,5 @@
+"use client";
+
 import {
   CreditCard,
   Lock,
@@ -5,7 +7,98 @@ import {
   Settings,
 } from "lucide-react";
 
+import { useEffect, useState } from "react";
+
+import {
+  LANGUAGE_COOKIE,
+  SUPPORTED_LANGUAGES,
+  type SupportedLanguage,
+} from "@/lib/i18n/language";
+
+const translations = {
+  en: {
+    title: "My Cards",
+    subtitle: "Manage your debit and credit cards.",
+    cardHolder: "Card Holder",
+    expires: "Expires",
+    viewDetails: "View Card Details",
+    freeze: "Freeze Card",
+    settings: "Card Settings",
+  },
+
+  de: {
+    title: "Meine Karten",
+    subtitle: "Verwalten Sie Ihre Debit- und Kreditkarten.",
+    cardHolder: "Karteninhaber",
+    expires: "Gültig bis",
+    viewDetails: "Kartendetails anzeigen",
+    freeze: "Karte sperren",
+    settings: "Karteneinstellungen",
+  },
+
+  fr: {
+    title: "Mes cartes",
+    subtitle: "Gérez vos cartes de débit et de crédit.",
+    cardHolder: "Titulaire de la carte",
+    expires: "Expire",
+    viewDetails: "Voir les détails de la carte",
+    freeze: "Bloquer la carte",
+    settings: "Paramètres de la carte",
+  },
+};
+
 export default function CardsPage() {
+  const [language, setLanguage] =
+    useState<SupportedLanguage>("en");
+
+  useEffect(() => {
+    const savedLanguage =
+      document.cookie
+        .split("; ")
+        .find((row) =>
+          row.startsWith(`${LANGUAGE_COOKIE}=`)
+        )
+        ?.split("=")[1] as SupportedLanguage | undefined;
+
+    if (
+      savedLanguage &&
+      SUPPORTED_LANGUAGES.includes(savedLanguage)
+    ) {
+      setLanguage(savedLanguage);
+    }
+
+    const handleLanguageChange = () => {
+      const currentLanguage =
+        document.cookie
+          .split("; ")
+          .find((row) =>
+            row.startsWith(`${LANGUAGE_COOKIE}=`)
+          )
+          ?.split("=")[1] as SupportedLanguage | undefined;
+
+      if (
+        currentLanguage &&
+        SUPPORTED_LANGUAGES.includes(currentLanguage)
+      ) {
+        setLanguage(currentLanguage);
+      }
+    };
+
+    window.addEventListener(
+      "language-change",
+      handleLanguageChange
+    );
+
+    return () => {
+      window.removeEventListener(
+        "language-change",
+        handleLanguageChange
+      );
+    };
+  }, []);
+
+  const t = translations[language];
+
   return (
     <div className="space-y-8">
 
@@ -13,11 +106,11 @@ export default function CardsPage() {
 
       <div>
         <h1 className="text-4xl font-bold text-slate-900">
-          My Cards
+          {t.title}
         </h1>
 
         <p className="text-slate-500 mt-2">
-          Manage your debit and credit cards.
+          {t.subtitle}
         </p>
       </div>
 
@@ -32,7 +125,7 @@ export default function CardsPage() {
             <CreditCard size={36} />
 
             <span className="font-semibold">
-             Universal Standard Bank
+              Universal Standard Bank
             </span>
 
           </div>
@@ -45,7 +138,7 @@ export default function CardsPage() {
 
             <div>
               <p className="text-sm opacity-80">
-                Card Holder
+                {t.cardHolder}
               </p>
 
               <p className="font-semibold">
@@ -55,7 +148,7 @@ export default function CardsPage() {
 
             <div>
               <p className="text-sm opacity-80">
-                Expires
+                {t.expires}
               </p>
 
               <p className="font-semibold">
@@ -75,17 +168,17 @@ export default function CardsPage() {
 
         <button className="bg-white border rounded-2xl p-6 hover:shadow-md transition flex items-center gap-4">
           <Eye className="text-red-600" />
-          <span>View Card Details</span>
+          <span>{t.viewDetails}</span>
         </button>
 
         <button className="bg-white border rounded-2xl p-6 hover:shadow-md transition flex items-center gap-4">
           <Lock className="text-red-600" />
-          <span>Freeze Card</span>
+          <span>{t.freeze}</span>
         </button>
 
         <button className="bg-white border rounded-2xl p-6 hover:shadow-md transition flex items-center gap-4">
           <Settings className="text-red-600" />
-          <span>Card Settings</span>
+          <span>{t.settings}</span>
         </button>
 
       </div>

@@ -1,0 +1,98 @@
+{
+  "nav": {
+    "home": "Home",
+    "personalBanking": "Personal Banking",
+    "businessBanking": "Business Banking",
+    "internationalBanking": "International Banking",
+    "cardsPayments": "Cards & Payments",
+    "contact": "Contact",
+    "login": "Login",
+    "openAccount": "Open an Account"
+  },
+  "common": {
+    "learnMore": "Learn More",
+    "getStarted": "Get Started",
+    "readMore": "Read More",
+    "contactUs": "Contact Us",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "back": "Back",
+    "next": "Next",
+    "close": "Close"
+  },
+  "language": {
+    "label": "Language",
+    "english": "English",
+    "german": "Deutsch",
+    "french": "Français"
+  },
+  "bank": {
+    "name": "Universal Standard Bank"
+  },
+  "hero": {
+    "badge": "Banking with confidence",
+    "headingLine1": "Your Trusted",
+    "headingLine2": "Partner",
+    "headingLine3": "for a",
+    "headingHighlight1": "Better",
+    "headingHighlight2": "Financial",
+    "headingHighlight3": "Future",
+    "description": "Universal Standard Bank provides secure and reliable financial services designed to help individuals, families, and businesses manage, grow, and protect their finances.",
+    "openAccount": "Open an Account",
+    "internetBanking": "Internet Banking"
+  },
+  "stats": {
+    "happyCustomers": "Happy Customers",
+    "countriesServed": "Countries Served",
+    "businessPartners": "Business Partners",
+    "digitalBanking": "Digital Banking"
+  },
+  "services": {
+    "eyebrow": "Our Banking Solutions",
+    "headingLine1": "Banking Products",
+    "headingLine2": "For Every Need",
+    "description": "Discover secure and reliable banking solutions designed to support your everyday finances, business growth and international banking needs.",
+    "personalBanking": {
+      "title": "Personal Banking",
+      "description": "Flexible banking solutions designed to help you manage your everyday finances with confidence.",
+      "items": [
+        "Savings Accounts",
+        "Current Accounts",
+        "Personal Loans",
+        "Mobile Banking"
+      ]
+    },
+    "businessBanking": {
+      "title": "Business Banking",
+      "description": "Reliable financial solutions to help businesses manage operations, growth and payments.",
+      "items": [
+        "Business Accounts",
+        "Payroll Solutions",
+        "Trade Finance",
+        "Merchant Services"
+      ]
+    },
+    "cardsPayments": {
+      "title": "Cards & Payments",
+      "description": "Convenient and secure payment solutions for your everyday purchases and transactions.",
+      "items": [
+        "Debit Cards",
+        "Credit Cards",
+        "Online Payments",
+        "Contactless Banking"
+      ]
+    },
+    "internationalBanking": {
+      "title": "International Banking",
+      "description": "Banking solutions designed for international transfers, currencies and cross-border needs.",
+      "items": [
+        "Global Transfers",
+        "Foreign Exchange",
+        "Multi-Currency",
+        "International Support"
+      ]
+    },
+    "learnMore": "Learn More"
+  }
+}

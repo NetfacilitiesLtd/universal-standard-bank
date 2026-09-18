@@ -1,8 +1,110 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import { MapPin, Phone, Mail } from "lucide-react";
+import { useEffect, useState } from "react";
+import type { SupportedLanguage } from "@/lib/i18n/language";
+
+const translations = {
+  en: {
+    description:
+      "Delivering secure, innovative and trusted banking solutions for individuals, businesses and international clients worldwide.",
+    banking: "Banking",
+    personalBanking: "Personal Banking",
+    businessBanking: "Business Banking",
+    internationalBanking: "International Banking",
+    cardsPayments: "Cards & Payments",
+    quickLinks: "Quick Links",
+    openAccount: "Open an Account",
+    internetBanking: "Internet Banking",
+    securityCenter: "Security Center",
+    contactUs: "Contact Us",
+    contact: "Contact",
+    privacyPolicy: "Privacy Policy",
+    terms: "Terms & Conditions",
+    security: "Security",
+    rights: "All Rights Reserved.",
+  },
+
+  de: {
+    description:
+      "Wir bieten sichere, innovative und vertrauenswürdige Banking-Lösungen für Privatpersonen, Unternehmen und internationale Kunden weltweit.",
+    banking: "Banking",
+    personalBanking: "Privatkundengeschäft",
+    businessBanking: "Geschäftsbanking",
+    internationalBanking: "Internationales Banking",
+    cardsPayments: "Karten & Zahlungen",
+    quickLinks: "Schnellzugriff",
+    openAccount: "Konto eröffnen",
+    internetBanking: "Online-Banking",
+    securityCenter: "Sicherheitszentrum",
+    contactUs: "Kontaktieren Sie uns",
+    contact: "Kontakt",
+    privacyPolicy: "Datenschutzrichtlinie",
+    terms: "Allgemeine Geschäftsbedingungen",
+    security: "Sicherheit",
+    rights: "Alle Rechte vorbehalten.",
+  },
+
+  fr: {
+    description:
+      "Nous proposons des solutions bancaires sécurisées, innovantes et fiables pour les particuliers, les entreprises et les clients internationaux dans le monde entier.",
+    banking: "Services bancaires",
+    personalBanking: "Banque personnelle",
+    businessBanking: "Banque professionnelle",
+    internationalBanking: "Services bancaires internationaux",
+    cardsPayments: "Cartes et paiements",
+    quickLinks: "Liens rapides",
+    openAccount: "Ouvrir un compte",
+    internetBanking: "Banque en ligne",
+    securityCenter: "Centre de sécurité",
+    contactUs: "Nous contacter",
+    contact: "Contact",
+    privacyPolicy: "Politique de confidentialité",
+    terms: "Conditions générales",
+    security: "Sécurité",
+    rights: "Tous droits réservés.",
+  },
+};
 
 export default function Footer() {
+  const [language, setLanguage] = useState<SupportedLanguage>("en");
+
+  useEffect(() => {
+    const match = document.cookie.match(
+      /(?:^|; )usb-language=([^;]*)/
+    );
+
+    if (
+      match &&
+      (match[1] === "en" ||
+        match[1] === "de" ||
+        match[1] === "fr")
+    ) {
+      setLanguage(match[1] as SupportedLanguage);
+    }
+
+    const handleLanguageChange = (event: Event) => {
+      const customEvent = event as CustomEvent<SupportedLanguage>;
+      setLanguage(customEvent.detail);
+    };
+
+    window.addEventListener(
+      "language-change",
+      handleLanguageChange
+    );
+
+    return () => {
+      window.removeEventListener(
+        "language-change",
+        handleLanguageChange
+      );
+    };
+  }, []);
+
+  const t = translations[language];
+
   return (
     <footer className="bg-slate-950 text-white">
 
@@ -27,9 +129,7 @@ export default function Footer() {
             />
 
             <p className="mt-6 text-slate-400 leading-8 max-w-sm">
-              Delivering secure, innovative and trusted banking
-              solutions for individuals, businesses and
-              international clients worldwide.
+              {t.description}
             </p>
 
           </div>
@@ -39,7 +139,7 @@ export default function Footer() {
           <div>
 
             <h3 className="text-lg font-semibold mb-6">
-              Banking
+              {t.banking}
             </h3>
 
             <div className="flex flex-col gap-4 text-slate-400">
@@ -48,28 +148,28 @@ export default function Footer() {
                 href="/personal-banking"
                 className="hover:text-white transition"
               >
-                Personal Banking
+                {t.personalBanking}
               </Link>
 
               <Link
                 href="/business-banking"
                 className="hover:text-white transition"
               >
-                Business Banking
+                {t.businessBanking}
               </Link>
 
               <Link
                 href="/international"
                 className="hover:text-white transition"
               >
-                International Banking
+                {t.internationalBanking}
               </Link>
 
               <Link
                 href="/cards"
                 className="hover:text-white transition"
               >
-                Cards & Payments
+                {t.cardsPayments}
               </Link>
 
             </div>
@@ -81,7 +181,7 @@ export default function Footer() {
           <div>
 
             <h3 className="text-lg font-semibold mb-6">
-              Quick Links
+              {t.quickLinks}
             </h3>
 
             <div className="flex flex-col gap-4 text-slate-400">
@@ -90,28 +190,28 @@ export default function Footer() {
                 href="/apply"
                 className="hover:text-white transition"
               >
-                Open an Account
+                {t.openAccount}
               </Link>
 
               <Link
                 href="/login"
                 className="hover:text-white transition"
               >
-                Internet Banking
+                {t.internetBanking}
               </Link>
 
               <Link
                 href="/security"
                 className="hover:text-white transition"
               >
-                Security Center
+                {t.securityCenter}
               </Link>
 
               <Link
                 href="/contact"
                 className="hover:text-white transition"
               >
-                Contact Us
+                {t.contactUs}
               </Link>
 
             </div>
@@ -123,7 +223,7 @@ export default function Footer() {
           <div>
 
             <h3 className="text-lg font-semibold mb-6">
-              Contact
+              {t.contact}
             </h3>
 
             <div className="space-y-5 text-slate-400">
@@ -184,7 +284,8 @@ export default function Footer() {
           <div className="flex flex-col lg:flex-row justify-between items-center gap-6">
 
             <p className="text-slate-500 text-sm">
-              © {new Date().getFullYear()} Universal Standard Bank. All Rights Reserved.
+              © {new Date().getFullYear()} Universal Standard Bank.{" "}
+              {t.rights}
             </p>
 
             <div className="flex flex-wrap justify-center gap-8 text-sm">
@@ -193,21 +294,21 @@ export default function Footer() {
                 href="/privacy"
                 className="text-slate-500 hover:text-white transition"
               >
-                Privacy Policy
+                {t.privacyPolicy}
               </Link>
 
               <Link
                 href="/terms"
                 className="text-slate-500 hover:text-white transition"
               >
-                Terms & Conditions
+                {t.terms}
               </Link>
 
               <Link
                 href="/security"
                 className="text-slate-500 hover:text-white transition"
               >
-                Security
+                {t.security}
               </Link>
 
             </div>

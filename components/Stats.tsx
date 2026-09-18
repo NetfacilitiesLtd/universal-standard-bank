@@ -1,42 +1,100 @@
+"use client";
+
 import {
   Users,
   Globe,
   Building2,
   ShieldCheck,
 } from "lucide-react";
+import { useEffect, useState } from "react";
+import type { SupportedLanguage } from "@/lib/i18n/language";
+
+const translations = {
+  en: {
+    happyCustomers: "Happy Customers",
+    countriesServed: "Countries Served",
+    businessPartners: "Business Partners",
+    digitalBanking: "Digital Banking",
+  },
+  de: {
+    happyCustomers: "Zufriedene Kunden",
+    countriesServed: "Bediente Länder",
+    businessPartners: "Geschäftspartner",
+    digitalBanking: "Digitales Banking",
+  },
+  fr: {
+    happyCustomers: "Clients satisfaits",
+    countriesServed: "Pays desservis",
+    businessPartners: "Partenaires commerciaux",
+    digitalBanking: "Services bancaires numériques",
+  },
+};
 
 export default function Stats() {
+  const [language, setLanguage] = useState<SupportedLanguage>("en");
+
+  useEffect(() => {
+    const match = document.cookie.match(
+      /(?:^|; )usb-language=([^;]*)/
+    );
+
+    if (
+      match &&
+      (match[1] === "en" ||
+        match[1] === "de" ||
+        match[1] === "fr")
+    ) {
+      setLanguage(match[1] as SupportedLanguage);
+    }
+
+    const handleLanguageChange = (event: Event) => {
+      const customEvent = event as CustomEvent<SupportedLanguage>;
+      setLanguage(customEvent.detail);
+    };
+
+    window.addEventListener(
+      "language-change",
+      handleLanguageChange
+    );
+
+    return () => {
+      window.removeEventListener(
+        "language-change",
+        handleLanguageChange
+      );
+    };
+  }, []);
+
+  const t = translations[language];
+
   const stats = [
     {
       icon: Users,
       number: "50K+",
-      title: "Happy Customers",
+      title: t.happyCustomers,
     },
     {
       icon: Globe,
       number: "25+",
-      title: "Countries Served",
+      title: t.countriesServed,
     },
     {
       icon: Building2,
       number: "120+",
-      title: "Business Partners",
+      title: t.businessPartners,
     },
     {
       icon: ShieldCheck,
       number: "24/7",
-      title: "Digital Banking",
+      title: t.digitalBanking,
     },
   ];
 
   return (
     <section className="relative -mt-36 z-30 px-4">
       <div className="max-w-[95%] mx-auto">
-
         <div className="bg-white rounded-3xl border border-gray-100 shadow-[0_20px_60px_rgba(0,0,0,0.12)] overflow-hidden">
-
           <div className="grid grid-cols-2 lg:grid-cols-4">
-
             {stats.map((stat, index) => {
               const Icon = stat.icon;
 
@@ -63,15 +121,11 @@ export default function Stats() {
                       {stat.title}
                     </p>
                   </div>
-
                 </div>
               );
             })}
-
           </div>
-
         </div>
-
       </div>
     </section>
   );

@@ -1,139 +1,215 @@
-import Image from "next/image";
-import Link from "next/link";
+"use client";
+
 import {
   ShieldCheck,
   Globe2,
-  Clock3,
-  Users,
-  ArrowRight,
+  Headphones,
+  TrendingUp,
 } from "lucide-react";
+import { useEffect, useState } from "react";
+import type { SupportedLanguage } from "@/lib/i18n/language";
 
-const features = [
-  {
-    icon: ShieldCheck,
-    title: "Bank-Grade Security",
+const translations = {
+  en: {
+    eyebrow: "Why Choose Us",
+    headingLine1: "Bank With",
+    headingLine2: "Confidence",
+    description:
+      "At Universal Standard Bank, we combine modern banking technology, strong security and dedicated customer service to give you a banking experience you can rely on.",
+    features: [
+      {
+        title: "Secure Banking",
+        description:
+          "Your money and personal information are protected with modern security measures and reliable banking systems.",
+      },
+      {
+        title: "International Banking",
+        description:
+          "Access convenient banking solutions for international transfers, multiple currencies and cross-border financial needs.",
+      },
+      {
+        title: "Dedicated Support",
+        description:
+          "Our customer-focused approach ensures that you have access to assistance whenever you need it.",
+      },
+      {
+        title: "Built for Your Future",
+        description:
+          "From everyday banking to long-term financial goals, our solutions are designed to support your financial journey.",
+      },
+    ],
   },
-  {
-    icon: Globe2,
-    title: "Trusted International Banking",
+
+  de: {
+    eyebrow: "Warum wir",
+    headingLine1: "Banking mit",
+    headingLine2: "Vertrauen",
+    description:
+      "Bei Universal Standard Bank verbinden wir moderne Banking-Technologie, hohe Sicherheitsstandards und engagierten Kundenservice, um Ihnen ein zuverlässiges Bankerlebnis zu bieten.",
+    features: [
+      {
+        title: "Sicheres Banking",
+        description:
+          "Ihr Geld und Ihre persönlichen Daten werden durch moderne Sicherheitsmaßnahmen und zuverlässige Banksysteme geschützt.",
+      },
+      {
+        title: "Internationales Banking",
+        description:
+          "Nutzen Sie praktische Banking-Lösungen für internationale Überweisungen, mehrere Währungen und grenzüberschreitende Finanzbedürfnisse.",
+      },
+      {
+        title: "Persönlicher Support",
+        description:
+          "Unser kundenorientierter Service stellt sicher, dass Sie jederzeit Unterstützung erhalten, wenn Sie diese benötigen.",
+      },
+      {
+        title: "Für Ihre Zukunft",
+        description:
+          "Vom täglichen Banking bis zu langfristigen finanziellen Zielen – unsere Lösungen begleiten Sie auf Ihrem finanziellen Weg.",
+      },
+    ],
   },
-  {
-    icon: Clock3,
-    title: "24/7 Digital Banking",
+
+  fr: {
+    eyebrow: "Pourquoi nous choisir",
+    headingLine1: "Une banque en toute",
+    headingLine2: "confiance",
+    description:
+      "Chez Universal Standard Bank, nous associons une technologie bancaire moderne, une sécurité renforcée et un service client attentif afin de vous offrir une expérience bancaire fiable.",
+    features: [
+      {
+        title: "Banque sécurisée",
+        description:
+          "Votre argent et vos informations personnelles sont protégés grâce à des mesures de sécurité modernes et des systèmes bancaires fiables.",
+      },
+      {
+        title: "Services bancaires internationaux",
+        description:
+          "Profitez de solutions bancaires pratiques pour les transferts internationaux, plusieurs devises et vos besoins financiers transfrontaliers.",
+      },
+      {
+        title: "Assistance dédiée",
+        description:
+          "Notre approche centrée sur le client vous garantit un accès à une assistance lorsque vous en avez besoin.",
+      },
+      {
+        title: "Pensé pour votre avenir",
+        description:
+          "Des opérations bancaires quotidiennes à vos objectifs financiers à long terme, nos solutions vous accompagnent dans votre parcours financier.",
+      },
+    ],
   },
-  {
-    icon: Users,
-    title: "Dedicated Relationship Managers",
-  },
+};
+
+const icons = [
+  ShieldCheck,
+  Globe2,
+  Headphones,
+  TrendingUp,
 ];
 
 export default function WhyChooseUs() {
+  const [language, setLanguage] = useState<SupportedLanguage>("en");
+
+  useEffect(() => {
+    const match = document.cookie.match(
+      /(?:^|; )usb-language=([^;]*)/
+    );
+
+    if (
+      match &&
+      (match[1] === "en" ||
+        match[1] === "de" ||
+        match[1] === "fr")
+    ) {
+      setLanguage(match[1] as SupportedLanguage);
+    }
+
+    const handleLanguageChange = (event: Event) => {
+      const customEvent = event as CustomEvent<SupportedLanguage>;
+      setLanguage(customEvent.detail);
+    };
+
+    window.addEventListener(
+      "language-change",
+      handleLanguageChange
+    );
+
+    return () => {
+      window.removeEventListener(
+        "language-change",
+        handleLanguageChange
+      );
+    };
+  }, []);
+
+  const t = translations[language];
+
   return (
     <section
       id="about"
-      className="bg-gray-50 py-24"
+      className="bg-slate-50 pt-24 pb-24"
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
 
-        <div className="grid lg:grid-cols-2 gap-14 lg:gap-20 items-center">
+        {/* Section Heading */}
+        <div className="text-center max-w-3xl mx-auto">
 
-          {/* LEFT SIDE */}
-          <div>
+          <p className="uppercase tracking-[5px] text-red-600 text-sm font-semibold">
+            {t.eyebrow}
+          </p>
 
-            <p className="uppercase tracking-[5px] text-red-600 text-sm font-semibold">
-              Why Choose Universal Standard Bank
-            </p>
+          <h2 className="mt-4 text-4xl md:text-5xl font-bold leading-tight text-slate-900">
+            {t.headingLine1}
+            <br />
+            <span className="text-red-600">
+              {t.headingLine2}
+            </span>
+          </h2>
 
-            <h2 className="mt-4 text-4xl md:text-5xl font-bold text-slate-900 leading-[1.1]">
-              Banking Built on
-              <br />
-              Trust, Security
-              <br />
-              <span className="text-red-600">& Innovation</span>
-            </h2>
+          <p className="mt-5 text-lg leading-8 text-slate-600">
+            {t.description}
+          </p>
 
-            <p className="mt-6 max-w-xl text-lg leading-8 text-slate-600">
-              We combine innovative digital banking, personalized financial
-              expertise and world-class security to help individuals,
-              families and businesses achieve their financial goals
-              with confidence.
-            </p>
+        </div>
 
-            {/* Features */}
-            <div className="grid sm:grid-cols-2 gap-x-8 gap-y-7 mt-10">
+        {/* Features */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-14">
 
-              {features.map((feature) => {
-                const Icon = feature.icon;
+          {t.features.map((feature, index) => {
+            const Icon = icons[index];
 
-                return (
-                  <div
-                    key={feature.title}
-                    className="flex items-center gap-4"
-                  >
+            return (
+              <div
+                key={feature.title}
+                className="group bg-white border border-slate-200 rounded-2xl p-7 transition-all duration-300 hover:-translate-y-1 hover:border-red-500 hover:shadow-xl"
+              >
 
-                    <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-white border border-red-100 shadow-sm flex items-center justify-center">
-                      <Icon
-                        size={22}
-                        strokeWidth={1.8}
-                        className="text-red-600"
-                      />
-                    </div>
+                {/* Icon */}
+                <div className="w-14 h-14 rounded-xl bg-red-50 flex items-center justify-center transition-all duration-300 group-hover:bg-red-600">
+                  <Icon
+                    size={28}
+                    strokeWidth={1.8}
+                    className="text-red-600 transition-colors duration-300 group-hover:text-white"
+                  />
+                </div>
 
-                    <span className="font-semibold text-slate-800 leading-6">
-                      {feature.title}
-                    </span>
+                {/* Title */}
+                <h3 className="mt-6 text-xl font-bold text-slate-900">
+                  {feature.title}
+                </h3>
 
-                  </div>
-                );
-              })}
+                {/* Red Accent */}
+                <div className="w-12 h-1 bg-red-600 rounded-full mt-3" />
 
-            </div>
+                {/* Description */}
+                <p className="mt-4 text-sm leading-6 text-slate-600">
+                  {feature.description}
+                </p>
 
-            {/* Button */}
-            <Link
-              href="/about"
-              className="inline-flex items-center gap-2 mt-11 bg-red-600 hover:bg-red-700 text-white font-semibold px-8 py-4 rounded-xl shadow-lg transition-all duration-300 hover:-translate-y-0.5"
-            >
-              Learn More
-              <ArrowRight size={18} />
-            </Link>
-
-          </div>
-
-          {/* RIGHT SIDE */}
-          <div className="relative">
-
-            {/* Image */}
-            <div className="relative overflow-hidden rounded-3xl shadow-2xl">
-
-              <Image
-                src="/images/banking-advisor.jpg"
-                alt="Universal Standard Bank banking advisor"
-                width={700}
-                height={750}
-                className="w-full h-[520px] lg:h-[600px] object-cover"
-                priority
-              />
-
-              {/* Subtle image overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-900/20 to-transparent pointer-events-none" />
-
-            </div>
-
-            {/* Experience Card */}
-            <div className="absolute -bottom-6 -left-4 sm:-left-6 bg-white rounded-2xl shadow-xl px-7 py-5">
-
-              <p className="text-4xl font-bold text-red-600 leading-none">
-                25+
-              </p>
-
-              <p className="mt-2 text-sm sm:text-base text-slate-600 font-medium">
-                Years of Trusted Banking
-              </p>
-
-            </div>
-
-          </div>
+              </div>
+            );
+          })}
 
         </div>
 
