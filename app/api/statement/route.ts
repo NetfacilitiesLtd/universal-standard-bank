@@ -410,7 +410,7 @@ export async function GET() {
       .text(t.transactionHistory, 50, 650);
 
     const drawTableHeader = () => {
-      const y = document.y + 10;
+      const y = document.y + 2;
 
       document
         .rect(50, y, 495, 25)
