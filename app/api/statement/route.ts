@@ -407,7 +407,7 @@ export async function GET() {
       .font("Helvetica-Bold")
       .fontSize(12)
       .fillColor("#0f172a")
-      .text(t.transactionHistory, 50, 650);
+      .text(t.transactionHistory, 50, 635);
 
     const drawTableHeader = () => {
       const y = document.y + 2;
