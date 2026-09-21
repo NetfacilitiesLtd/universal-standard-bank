@@ -58,7 +58,7 @@ const pathname = (
 
 const result = await get(pathname, {
   access: "private",
-  token: process.env.BLOB_READ_WRITE_TOKEN,
+  token: process.env.USB_BLOB_READ_WRITE_TOKEN,
 });
 
     if (!result || result.statusCode !== 200) {
