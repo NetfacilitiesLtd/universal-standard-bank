@@ -407,10 +407,10 @@ export async function GET() {
       .font("Helvetica-Bold")
       .fontSize(12)
       .fillColor("#0f172a")
-      .text(t.transactionHistory, 50, 635);
+      .text(t.transactionHistory, 50, 655);
 
     const drawTableHeader = () => {
-      const y = document.y + 2;
+      const y = document.y + 22;
 
       document
         .rect(50, y, 495, 25)
