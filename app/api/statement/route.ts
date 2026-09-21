@@ -439,7 +439,9 @@ export async function GET() {
 
     drawTableHeader();
 
-    for (const transaction of transactions) {
+    let transactionY = document.y + 55;
+
+for (const transaction of transactions) {
   const credit = isCredit(transaction.type);
 
   const amount = `${credit ? "+" : "-"}${formatMoney(
@@ -463,7 +465,7 @@ export async function GET() {
     referenceHeight + 8
   );
 
-  if (document.y + rowHeight > 740) {
+  if (transactionY + rowHeight > 740) {
     document.addPage();
 
     document
@@ -472,12 +474,12 @@ export async function GET() {
       .fillColor("#0f172a")
       .text(t.continued, 50, 50);
 
-    document.y = 75;
-
     drawTableHeader();
+
+    transactionY = 130;
   }
 
-  const rowY = document.y;
+  const rowY = transactionY;
 
   if (transactions.indexOf(transaction) % 2 === 1) {
     document
@@ -522,7 +524,7 @@ export async function GET() {
     .strokeColor("#e2e8f0")
     .stroke();
 
-  document.y = rowY + rowHeight + 2;
+  transactionY = rowY + rowHeight + 2;
 }
     if (transactions.length === 0) {
       document
