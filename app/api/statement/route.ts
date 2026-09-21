@@ -360,20 +360,20 @@ export async function GET() {
       .font("Helvetica-Bold")
       .fontSize(12)
       .fillColor("#0f172a")
-      .text(t.accountSummary, 50, 555);
+      .text(t.accountSummary, 50, 540);
 
     document
-      .roundedRect(50, 577, 155, 70, 8)
+      .roundedRect(50, 562, 155, 70, 8)
       .fillColor("#f0fdf4")
       .fill();
 
     document
-      .roundedRect(220, 577, 155, 70, 8)
+      .roundedRect(220, 562, 155, 70, 8)
       .fillColor("#fef2f2")
       .fill();
 
     document
-      .roundedRect(390, 577, 155, 70)
+      .roundedRect(390, 562, 155, 70)
       .fillColor("#eff6ff")
       .fill();
 
@@ -381,23 +381,23 @@ export async function GET() {
       .font("Helvetica-Bold")
       .fontSize(8)
       .fillColor("#475569")
-      .text(t.totalDeposits, 65, 592)
-      .text(t.totalWithdrawals, 235, 592)
-      .text(t.currentBalance, 405, 592);
+      .text(t.totalDeposits, 65, 577)
+      .text(t.totalWithdrawals, 235, 577)
+      .text(t.currentBalance, 405, 577);
 
     document
       .font("Helvetica-Bold")
       .fontSize(13)
       .fillColor("#15803d")
-      .text(formatMoney(totalDeposits), 65, 615);
+      .text(formatMoney(totalDeposits), 65, 600);
 
     document
       .fillColor("#dc2626")
-      .text(formatMoney(totalWithdrawals), 235, 615);
+      .text(formatMoney(totalWithdrawals), 235, 600);
 
     document
       .fillColor("#1d4ed8")
-      .text(formatMoney(customer.balance), 405, 615);
+      .text(formatMoney(customer.balance), 405, 600);
 
     /*
      * Transaction History
