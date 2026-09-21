@@ -160,8 +160,10 @@ export default function ContactPage() {
                     </h3>
 
                     <p className="text-slate-600 mt-2">
-                      info@universalstanb.com
-                    </p>
+  info@universalstanb.com
+  <br />
+  inquiry@universalstanb.com
+</p>
                   </div>
                 </div>
 

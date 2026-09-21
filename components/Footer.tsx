@@ -266,8 +266,10 @@ export default function Footer() {
                 />
 
                 <span>
-                  info@universalstanb.com
-                </span>
+  info@universalstanb.com
+  <br />
+  inquiry@universalstanb.com
+</span>
 
               </div>
 
