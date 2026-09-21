@@ -463,7 +463,7 @@ export async function GET() {
     referenceHeight + 8
   );
 
-  if (document.y + rowHeight > 710) {
+  if (document.y + rowHeight > 740) {
     document.addPage();
 
     document
