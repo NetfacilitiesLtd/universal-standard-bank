@@ -440,78 +440,90 @@ export async function GET() {
     drawTableHeader();
 
     for (const transaction of transactions) {
-      if (document.y > 710) {
-        document.addPage();
+  const credit = isCredit(transaction.type);
 
-        document
-          .font("Helvetica-Bold")
-          .fontSize(12)
-          .fillColor("#0f172a")
-          .text(t.continued, 50, 50);
+  const amount = `${credit ? "+" : "-"}${formatMoney(
+    transaction.amount
+  )}`;
 
-        document.y = 75;
+  const description = transaction.description || "-";
+  const reference = transaction.reference || "-";
 
-        drawTableHeader();
-      }
+  const descriptionHeight = document.heightOfString(description, {
+    width: 120,
+  });
 
-      const credit = isCredit(transaction.type);
+  const referenceHeight = document.heightOfString(reference, {
+    width: 100,
+  });
 
-      const amount = `${credit ? "+" : "-"}${formatMoney(
-        transaction.amount
-      )}`;
+  const rowHeight = Math.max(
+    30,
+    descriptionHeight + 8,
+    referenceHeight + 8
+  );
 
-      const rowY = document.y;
+  if (document.y + rowHeight > 710) {
+    document.addPage();
 
-      if (transactions.indexOf(transaction) % 2 === 1) {
-        document
-          .rect(50, rowY - 4, 495, 32)
-          .fillColor("#f8fafc")
-          .fill();
-      }
+    document
+      .font("Helvetica-Bold")
+      .fontSize(12)
+      .fillColor("#0f172a")
+      .text(t.continued, 50, 50);
 
-      document
-        .font("Helvetica")
-        .fontSize(7.5)
-        .fillColor("#334155")
-        .text(formatDate(new Date(transaction.transactionDate)), 58, rowY, {
-          width: 58,
-        })
-        .text(transaction.description || "-", 116, rowY, {
-          width: 120,
-          ellipsis: true,
-        })
-        .text(transaction.reference || "-", 236, rowY, {
-          width: 100,
-          ellipsis: true,
-        })
-        .text(transaction.type, 336, rowY, {
-          width: 70,
-          ellipsis: true,
-        })
-        .fillColor(credit ? "#15803d" : "#dc2626")
-        .font("Helvetica-Bold")
-        .text(amount, 406, rowY, {
-          width: 70,
-          align: "right",
-        })
-        .fillColor("#334155")
-        .font("Helvetica")
-        .text(transaction.status || "-", 476, rowY, {
-          width: 65,
-          align: "right",
-          ellipsis: true,
-        });
+    document.y = 75;
 
-      document
-        .moveTo(50, rowY + 23)
-        .lineTo(545, rowY + 23)
-        .lineWidth(0.5)
-        .strokeColor("#e2e8f0")
-        .stroke();
+    drawTableHeader();
+  }
 
-      document.y = rowY + 30;
-    }
+  const rowY = document.y;
 
+  if (transactions.indexOf(transaction) % 2 === 1) {
+    document
+      .rect(50, rowY - 4, 495, rowHeight)
+      .fillColor("#f8fafc")
+      .fill();
+  }
+
+  document
+    .font("Helvetica")
+    .fontSize(7.5)
+    .fillColor("#334155")
+    .text(formatDate(new Date(transaction.transactionDate)), 58, rowY, {
+      width: 58,
+    })
+    .text(description, 116, rowY, {
+      width: 120,
+    })
+    .text(reference, 236, rowY, {
+      width: 100,
+    })
+    .text(transaction.type, 336, rowY, {
+      width: 70,
+    })
+    .fillColor(credit ? "#15803d" : "#dc2626")
+    .font("Helvetica-Bold")
+    .text(amount, 406, rowY, {
+      width: 70,
+      align: "right",
+    })
+    .fillColor("#334155")
+    .font("Helvetica")
+    .text(transaction.status || "-", 476, rowY, {
+      width: 65,
+      align: "right",
+    });
+
+  document
+    .moveTo(50, rowY + rowHeight)
+    .lineTo(545, rowY + rowHeight)
+    .lineWidth(0.5)
+    .strokeColor("#e2e8f0")
+    .stroke();
+
+  document.y = rowY + rowHeight + 2;
+}
     if (transactions.length === 0) {
       document
         .font("Helvetica")
