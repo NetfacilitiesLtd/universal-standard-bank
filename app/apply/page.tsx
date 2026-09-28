@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, Landmark } from "lucide-react";
+import { upload } from "@vercel/blob/client";
 import type { ApplicationFormData } from "@/types/application";
 
 import PersonalInformation from "@/components/application/PersonalInformation";
@@ -148,27 +149,38 @@ export default function ApplyPage() {
     e.preventDefault();
 
     try {
-      const uploadData = new FormData();
-
-      if (formData.passportPhoto) {
-        uploadData.append("passportPhoto", formData.passportPhoto);
-      }
-
-      if (formData.governmentId) {
-        uploadData.append("governmentId", formData.governmentId);
-      }
-
-      const uploadResponse = await fetch("/api/uploads", {
-        method: "POST",
-        body: uploadData,
-      });
-
-      const uploadResult = await uploadResponse.json();
-
-      if (!uploadResult.success) {
-        alert(uploadResult.message);
+      if (!formData.passportPhoto || !formData.governmentId) {
+        alert(t.uploadFailed);
         return;
       }
+
+      const passportUpload = await upload(
+        `passports/${Date.now()}-${formData.passportPhoto.name.replace(/\s+/g, "-")}`,
+        formData.passportPhoto,
+        {
+          access: "private",
+          handleUploadUrl: "/api/uploads",
+          clientPayload: JSON.stringify({
+            folder: "passports",
+          }),
+          multipart:
+            formData.passportPhoto.size > 5 * 1024 * 1024,
+        }
+      );
+
+      const governmentIdUpload = await upload(
+        `government-ids/${Date.now()}-${formData.governmentId.name.replace(/\s+/g, "-")}`,
+        formData.governmentId,
+        {
+          access: "private",
+          handleUploadUrl: "/api/uploads",
+          clientPayload: JSON.stringify({
+            folder: "government-ids",
+          }),
+          multipart:
+            formData.governmentId.size > 5 * 1024 * 1024,
+        }
+      );
 
       const response = await fetch("/api/applications", {
         method: "POST",
@@ -203,8 +215,8 @@ export default function ApplyPage() {
           password: formData.password,
           pin: formData.pin,
 
-          passportPhoto: uploadResult.passportPhoto,
-          governmentId: uploadResult.governmentId,
+          passportPhoto: passportUpload.url,
+          governmentId: governmentIdUpload.url,
         }),
       });
 

@@ -1,61 +1,71 @@
+import { handleUpload, type HandleUploadBody } from "@vercel/blob/client";
 import { NextResponse } from "next/server";
-import { saveUploadedFile } from "@/lib/upload";
 
-export async function POST(request: Request) {
+export async function POST(request: Request): Promise<NextResponse> {
   try {
-    const formData = await request.formData();
+    const body = (await request.json()) as HandleUploadBody;
 
-    const passportPhoto = formData.get("passportPhoto") as File | null;
-const governmentId = formData.get("governmentId") as File | null;
-    if (!passportPhoto) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "No passport photo uploaded.",
-        },
-        { status: 400 }
-      );
-    }
-if (!governmentId) {
-  return NextResponse.json(
-    {
-      success: false,
-      message: "No government ID uploaded.",
-    },
-    { status: 400 }
-  );
-}
-    if (passportPhoto.size === 0) {
-  return NextResponse.json(
-    {
-      success: false,
-      message: "Please select a passport photo.",
-    },
-    { status: 400 }
-  );
-}
-   const passportPath = await saveUploadedFile(
-  passportPhoto,
-  "passports"
-);
-const governmentIdPath = await saveUploadedFile(
-  governmentId,
-  "government-ids"
-);
-    return NextResponse.json({
-  success: true,
-  passportPhoto: passportPath,
-  governmentId: governmentIdPath,
-});
+    const jsonResponse = await handleUpload({
+      body,
+      request,
+      token: process.env.USB_BLOB_READ_WRITE_TOKEN,
+
+      onBeforeGenerateToken: async (pathname, clientPayload) => {
+        const payload = clientPayload
+          ? JSON.parse(clientPayload)
+          : null;
+
+        const folder =
+          payload?.folder === "government-ids"
+            ? "government-ids"
+            : payload?.folder === "passports"
+              ? "passports"
+              : null;
+
+        if (!folder || !pathname.startsWith(`${folder}/`)) {
+          throw new Error("Invalid upload destination.");
+        }
+
+        const allowedContentTypes =
+          folder === "passports"
+            ? [
+                "image/jpeg",
+                "image/png",
+                "image/webp",
+              ]
+            : [
+                "image/jpeg",
+                "image/png",
+                "image/webp",
+                "application/pdf",
+              ];
+
+        return {
+          allowedContentTypes,
+          maximumSizeInBytes: 10 * 1024 * 1024,
+          addRandomSuffix: true,
+          validUntil: Date.now() + 15 * 60 * 1000,
+        };
+      },
+
+      onUploadCompleted: async () => {
+        // Upload completed successfully.
+      },
+    });
+
+    return NextResponse.json(jsonResponse);
   } catch (error) {
-    console.error(error);
+    console.error("Client upload token error:", error);
 
     return NextResponse.json(
       {
         success: false,
-        message: "Upload failed.",
+        message:
+          error instanceof Error
+            ? error.message
+            : "Upload authorization failed.",
       },
-      { status: 500 }
+      { status: 400 }
     );
   }
 }
