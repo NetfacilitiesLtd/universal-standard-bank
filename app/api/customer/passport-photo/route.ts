@@ -49,16 +49,18 @@ export async function GET() {
       });
     }
 
-    const pathname = (
-  passportPhoto.startsWith("http")
-    ? new URL(passportPhoto).pathname
-    : passportPhoto
-).replace(/^\/+/, "");
+    let pathname = passportPhoto;
+
+    if (passportPhoto.startsWith("http://") || passportPhoto.startsWith("https://")) {
+      pathname = new URL(passportPhoto).pathname;
+    }
+
+    pathname = pathname.replace(/^\/+/, "");
 
     const result = await get(pathname, {
-  access: "private",
-  token: process.env.USB_BLOB_READ_WRITE_TOKEN,
-});
+      access: "private",
+      token: process.env.USB_BLOB_READ_WRITE_TOKEN,
+    });
 
     if (!result || result.statusCode !== 200) {
       return new NextResponse("Passport photo not found", {
@@ -69,8 +71,7 @@ export async function GET() {
     return new NextResponse(result.stream, {
       status: 200,
       headers: {
-        "Content-Type":
-          result.blob.contentType || "image/jpeg",
+        "Content-Type": result.blob.contentType || "image/jpeg",
         "Cache-Control": "private, no-store",
         "X-Content-Type-Options": "nosniff",
       },
@@ -78,11 +79,8 @@ export async function GET() {
   } catch (error) {
     console.error("Passport photo error:", error);
 
-    return new NextResponse(
-      "Unable to load passport photo",
-      {
-        status: 500,
-      }
-    );
+    return new NextResponse("Unable to load passport photo", {
+      status: 500,
+    });
   }
 }
