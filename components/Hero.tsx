@@ -94,7 +94,7 @@ export default function Hero() {
       setCurrentImage((previous) => {
         return (previous + 1) % heroImages.length;
       });
-    }, 20000);
+    }, 13000);
 
     return () => {
       window.clearInterval(interval);
