@@ -47,8 +47,15 @@ const translations = {
   },
 };
 
+const heroImages = [
+  "/images/hero-bg.jpg",
+  "/images/hero-bg-2.jpg",
+  "/images/hero-bg-3.jpg",
+];
+
 export default function Hero() {
   const [language, setLanguage] = useState<SupportedLanguage>("en");
+  const [currentImage, setCurrentImage] = useState(0);
 
   useEffect(() => {
     const match = document.cookie.match(
@@ -82,16 +89,38 @@ export default function Hero() {
     };
   }, []);
 
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setCurrentImage((previous) => {
+        return (previous + 1) % heroImages.length;
+      });
+    }, 20000);
+
+    return () => {
+      window.clearInterval(interval);
+    };
+  }, []);
+
   const t = translations[language];
 
   return (
     <section
       id="home"
-      className="relative min-h-[850px] bg-cover bg-center bg-no-repeat overflow-hidden"
-      style={{
-        backgroundImage: "url('/images/hero-bg.jpg')",
-      }}
+      className="relative min-h-[850px] overflow-hidden bg-white"
     >
+      {/* Rotating Hero Images */}
+      {heroImages.map((image, index) => (
+        <div
+          key={image}
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-[1500ms] ease-in-out"
+          style={{
+            backgroundImage: `url("${image}")`,
+            opacity: currentImage === index ? 1 : 0,
+          }}
+          aria-hidden="true"
+        />
+      ))}
+
       {/* Light overlay on the left side */}
       <div className="absolute inset-0 bg-gradient-to-r from-white via-white/85 to-white/10" />
 
